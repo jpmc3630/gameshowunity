@@ -154,6 +154,7 @@ public class LoginScript : MonoBehaviour
     }
     void OnRegisterRequestFinished(HTTPRequest request, HTTPResponse response)
     {
+        Debug.Log("Register response receieved: " + response.DataAsText);
         if (response.StatusCode != 200) {
             this.showError(response.DataAsText);
             RawImage.SetActive(true);

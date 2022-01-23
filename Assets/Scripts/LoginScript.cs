@@ -6,14 +6,44 @@ using System;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+[Serializable]
+public class userObject
+{
+    public String email;
+    public String token;
+    public String name;
+    public int id;
+
+}
+
+[Serializable]
+public class registrationObject
+{
+    public String token;
+    public userObject user;
+}
+
+[Serializable]
+public class responseObject
+{
+    public String message;
+    public errorsObject errors;
+}
+
+[Serializable]
+public class errorsObject
+{
+    public String[] email;
+    public String[] password;
+}
+
 public class LoginScript : MonoBehaviour
 {
     private userObject user = new userObject();
-    public Text Message;
-    public Text StorageText;
+    public Text MessageText;
+    public Text UserText;
     public InputField EmailField;
     public InputField Password;
-    public GameObject Login;
     public GameObject LogoutButton;
     public GameObject RawImage;
     EventSystem m_EventSystem;
@@ -23,11 +53,11 @@ public class LoginScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isLoggedIn();
+        RawImage.SetActive(false);
+        LogoutButton.SetActive(false);
+        this.isLoggedIn();
         m_EventSystem = EventSystem.current;
         // m_EventSystem.SetSelectedGameObject(null);
-        RawImage.SetActive(false);
-
     }
 
     public void LoginButton() {
@@ -66,6 +96,8 @@ public class LoginScript : MonoBehaviour
                 EmailField.text = user.email;
                 this.authenticateUser(user.token);
             }
+        } else {
+            RawImage.SetActive(true);
         }
     }
 
@@ -79,65 +111,70 @@ public class LoginScript : MonoBehaviour
     }
 
     public void storeUser(userObject user) {
-        Debug.Log("Setting String");
+        Debug.Log("Storing User:");
         String json = JsonUtility.ToJson(user);
         PlayerPrefs.SetString("user", json);
-
-        // and hide the login panel i guess!
+        UserText.text = user.email;
+        DumpToConsole(user);
+        LogoutButton.SetActive(true);
+        RawImage.SetActive(false);
     }
     
     public void logout() {
         Debug.Log("Logging out!");
         PlayerPrefs.DeleteKey("user");
+        UserText.text = "";
+        LogoutButton.SetActive(false);
         RawImage.SetActive(true);
     }
 
+    void showError(String responseText) {
+          responseObject resp = new responseObject();
+          resp = JsonUtility.FromJson<responseObject>(responseText);
+          if (resp.errors != null) {
+              String errorMessage = ""; 
+              if (resp.errors.email != null) {
+                  errorMessage += string.Join("\n", resp.errors.email) + "\n";
+              }
+              if (resp.errors.password != null) {
+                  errorMessage += string.Join("\n", resp.errors.password);
+              }
+              MessageText.text = errorMessage;
+          }
+    }
     void OnLoginRequestFinished(HTTPRequest request, HTTPResponse response)
     {
-      Debug.Log("Request Finished! Text received: " + response.DataAsText);
-      user.token = response.DataAsText;
-      Message.text = user.token;
-      this.authenticateUser(user.token);
+      Debug.Log("Login Response recieved: " + response.DataAsText);
+      if (response.StatusCode != 200) {
+          this.showError(response.DataAsText);
+          return;
+      }
+          user.token = response.DataAsText;
+          this.authenticateUser(user.token);
     }
     void OnRegisterRequestFinished(HTTPRequest request, HTTPResponse response)
     {
-      Debug.Log("Register finished - Text received: " + response.DataAsText);
-      
-      if (response.StatusCode == 200) {
-          Debug.Log("Successfully registered user");
-          
-          registrationObject registered = JsonUtility.FromJson<registrationObject>(response.DataAsText);
-          registered.user.token = registered.token;
-          user = registered.user;
-          this.storeUser(user);
-          
-          // hide the login screen
-          RawImage.SetActive(false);
-      } else {
-          Debug.Log("Failed to authenticate user - Error: " + response.StatusCode);
-          RawImage.SetActive(true);
-      }
+        if (response.StatusCode != 200) {
+            this.showError(response.DataAsText);
+            RawImage.SetActive(true);
+            return;
+        }
+
+        registrationObject registered = JsonUtility.FromJson<registrationObject>(response.DataAsText);
+        registered.user.token = registered.token;
+        user = registered.user;
+        this.storeUser(user);
     }
 
     void onAuthRequestFinished(HTTPRequest request, HTTPResponse response)
     {
-      Debug.Log("onAuthRequestFinished! Text received: " + response.DataAsText);
-      Message.text = response.DataAsText;
-
+      Debug.Log("Auth response: " + response.DataAsText);
       if (response.StatusCode == 200) {
           Debug.Log("Successfully authenticated user");
-          
           String tokenTemp = user.token;
           user = JsonUtility.FromJson<userObject>(response.DataAsText);
           user.token = tokenTemp;
-          Debug.Log("------------------------------------");
-          DumpToConsole(user);
-          Debug.Log("------------------------------------");
-          
           this.storeUser(user);
-          
-          // hide the login screen
-          RawImage.SetActive(false);
       } else {
           Debug.Log("Failed to authenticate user - Error: " + response.StatusCode);
           RawImage.SetActive(true);
@@ -164,21 +201,3 @@ public class LoginScript : MonoBehaviour
     }
 
 }
-
-[Serializable]
-public class userObject
-{
-    public String email;
-    public String token;
-    public String name;
-    public int id;
-
-}
-
-[Serializable]
-public class registrationObject
-{
-    public String token;
-    public userObject user;
-}
-

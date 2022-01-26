@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BestHTTP;
 using System;
+using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
@@ -141,6 +142,8 @@ public class LoginScript : MonoBehaviour
               }
               if (resp.errors.password != null) {
                   errorMessage += string.Join("\n", resp.errors.password);
+                  errorMessage = errorMessage.Replace("The password must be between 9 and 255 characters.\n", "");
+                  errorMessage = errorMessage.Replace("The password must be at least 9 characters.\nThe password must contain at least one number", "The password must be at least 9 characters and contain at least one number");
               }
               MessageText.text = errorMessage;
           }

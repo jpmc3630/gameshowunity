@@ -115,6 +115,7 @@ public class LoginScript : MonoBehaviour
         String json = JsonUtility.ToJson(user);
         PlayerPrefs.SetString("user", json);
         UserText.text = user.email;
+        MessageText.text = "";
         DumpToConsole(user);
         LogoutButton.SetActive(true);
         RawImage.SetActive(false);

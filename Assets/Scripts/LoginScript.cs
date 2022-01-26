@@ -48,7 +48,7 @@ public class LoginScript : MonoBehaviour
     public GameObject RawImage;
     EventSystem m_EventSystem;
     
-    private const string baseUrl = "https://d9f8-61-245-129-196.au.ngrok.io";
+    private const string baseUrl = "https://bdeb-61-245-129-196.au.ngrok.io";
     
     // Start is called before the first frame update
     void Start()
@@ -57,7 +57,6 @@ public class LoginScript : MonoBehaviour
         LogoutButton.SetActive(false);
         this.isLoggedIn();
         m_EventSystem = EventSystem.current;
-        // m_EventSystem.SetSelectedGameObject(null);
     }
 
     public void LoginButton() {
@@ -118,6 +117,8 @@ public class LoginScript : MonoBehaviour
         DumpToConsole(user);
         LogoutButton.SetActive(true);
         RawImage.SetActive(false);
+        m_EventSystem.SetSelectedGameObject(null);
+        m_EventSystem.SetSelectedGameObject(LogoutButton);
     }
     
     public void logout() {
@@ -126,6 +127,8 @@ public class LoginScript : MonoBehaviour
         UserText.text = "";
         LogoutButton.SetActive(false);
         RawImage.SetActive(true);
+        m_EventSystem.SetSelectedGameObject(null);
+        m_EventSystem.SetSelectedGameObject(EmailField.gameObject);
     }
 
     void showError(String responseText) {

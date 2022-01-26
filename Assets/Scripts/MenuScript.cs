@@ -27,6 +27,7 @@ public class MenuScript : MonoBehaviour
     public void MenuButtonClick() {
         Debug.Log("MenuButtonClick");
         MenuPanel.SetActive(true);
+        UnityEngine.tvOS.Remote.allowExitToHome = true;
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(ResumeGameButton.gameObject);
     }
@@ -35,6 +36,7 @@ public class MenuScript : MonoBehaviour
         Debug.Log("BackToMenuButtonClick");
         SettingsPanel.SetActive(false);
         MenuPanel.SetActive(true);
+        UnityEngine.tvOS.Remote.allowExitToHome = true;
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(ResumeGameButton.gameObject);
     }
@@ -42,12 +44,14 @@ public class MenuScript : MonoBehaviour
     public void SettingsButtonClick() {
         Debug.Log("SettingsButtonClick");
         SettingsPanel.SetActive(true);
+        UnityEngine.tvOS.Remote.allowExitToHome = false;
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(BackToMenuButton.gameObject);
     }
 
     public void ResumeGameButtonClick() {
         Debug.Log("ResumeGameButton");
+        UnityEngine.tvOS.Remote.allowExitToHome = false;
         MenuPanel.SetActive(false);
     }
 }

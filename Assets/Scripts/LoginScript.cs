@@ -44,7 +44,7 @@ public class LoginScript : MonoBehaviour
     public Text MessageText;
     public Text UserText;
     public InputField EmailField;
-    public InputField Password;
+    public InputField PasswordField;
     public GameObject LogoutButton;
     public GameObject RawImage;
     EventSystem m_EventSystem;
@@ -65,7 +65,7 @@ public class LoginScript : MonoBehaviour
         HTTPRequest request = new HTTPRequest(new Uri(baseUrl + "/api/login"), HTTPMethods.Post, OnLoginRequestFinished);
         request.SetHeader("Accept", "application/json");
         request.AddField("email", EmailField.text);
-        request.AddField("password", Password.text);
+        request.AddField("password", PasswordField.text);
         request.AddField("device_name", SystemInfo.deviceModel);
         request.Send();
 
@@ -76,7 +76,7 @@ public class LoginScript : MonoBehaviour
         HTTPRequest request = new HTTPRequest(new Uri(baseUrl + "/api/register"), HTTPMethods.Post, OnRegisterRequestFinished);
         request.SetHeader("Accept", "application/json");
         request.AddField("email", EmailField.text);
-        request.AddField("password", Password.text);
+        request.AddField("password", PasswordField.text);
         request.AddField("device_name", SystemInfo.deviceModel);
         request.Send();
     }
@@ -187,19 +187,6 @@ public class LoginScript : MonoBehaviour
           RawImage.SetActive(true);
       }
     }
-
-    // public void selectPasswordField()
-    // {
-    //     m_EventSystem.SetSelectedGameObject(null);
-    //     m_EventSystem.SetSelectedGameObject(Password.gameObject);
-    // }
-
-    // public void selectLoginButton()
-    // {
-    //     Login.Select();
-    //     // m_EventSystem.SetSelectedGameObject(null);
-    //     // m_EventSystem.SetSelectedGameObject(Login);
-    // }
 
     public static void DumpToConsole(object obj)
     {

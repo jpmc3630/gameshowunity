@@ -46,18 +46,18 @@ public class LoginScript : MonoBehaviour
     public InputField EmailField;
     public InputField PasswordField;
     public GameObject LogoutButton;
-    public GameObject RawImage;
+    public GameObject LoginPanel;
+    public GameObject SettingsPanel;
+    public GameObject MenuPanel;
     EventSystem m_EventSystem;
     
-    private const string baseUrl = "https://bdeb-61-245-129-196.au.ngrok.io";
+    public const string baseUrl = "https://bdeb-61-245-129-196.au.ngrok.io";
     
     // Start is called before the first frame update
     void Start()
     {
-        RawImage.SetActive(false);
-        LogoutButton.SetActive(false);
-        this.isLoggedIn();
         m_EventSystem = EventSystem.current;
+        this.isLoggedIn();
     }
 
     public void LoginButton() {
@@ -68,7 +68,6 @@ public class LoginScript : MonoBehaviour
         request.AddField("password", PasswordField.text);
         request.AddField("device_name", SystemInfo.deviceModel);
         request.Send();
-
     }
 
     public void RegisterAndLoginButton() {
@@ -97,7 +96,7 @@ public class LoginScript : MonoBehaviour
                 this.authenticateUser(user.token);
             }
         } else {
-            RawImage.SetActive(true);
+            LoginPanel.SetActive(true);
         }
     }
 
@@ -118,7 +117,7 @@ public class LoginScript : MonoBehaviour
         MessageText.text = "";
         DumpToConsole(user);
         LogoutButton.SetActive(true);
-        RawImage.SetActive(false);
+        LoginPanel.SetActive(false);
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(LogoutButton);
     }
@@ -127,8 +126,9 @@ public class LoginScript : MonoBehaviour
         Debug.Log("Logging out!");
         PlayerPrefs.DeleteKey("user");
         UserText.text = "";
-        LogoutButton.SetActive(false);
-        RawImage.SetActive(true);
+        SettingsPanel.SetActive(false);
+        MenuPanel.SetActive(false);
+        LoginPanel.SetActive(true);
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(EmailField.gameObject);
     }
@@ -164,7 +164,7 @@ public class LoginScript : MonoBehaviour
         Debug.Log("Register response receieved: " + response.DataAsText);
         if (response.StatusCode != 200) {
             this.showError(response.DataAsText);
-            RawImage.SetActive(true);
+            LoginPanel.SetActive(true);
             return;
         }
 
@@ -185,7 +185,7 @@ public class LoginScript : MonoBehaviour
           this.storeUser(user);
       } else {
           Debug.Log("Failed to authenticate user - Error: " + response.StatusCode);
-          RawImage.SetActive(true);
+          LoginPanel.SetActive(true);
       }
     }
 

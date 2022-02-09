@@ -78,7 +78,10 @@ public Text my_text;
 
         _channel.Bind("client-my-event", (String data) =>
         {
+
           Debug.Log("----------------------------------------------------------------------Message Recieved---------------------------------------------------------------");
+          Debug.Log(data);
+          
             // try
             // {
             //     var theData = data.ToString()

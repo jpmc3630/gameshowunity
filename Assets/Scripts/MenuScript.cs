@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,13 +7,16 @@ using static LoginScript;
 
 public class MenuScript : MonoBehaviour
 {
+    EventSystem m_EventSystem;
+    // public GameObject PusherGameObject;
+    public GameObject StartButton;
     public GameObject SettingsPanel;
     public GameObject MenuPanel;
     public GameObject LogoutButton;
     public GameObject LoginPanel;
     public GameObject BackToMenuButton;
     public GameObject ResumeGameButton;
-    EventSystem m_EventSystem;
+    // public ScriptName Pusher = PusherGameObject.GetComponent<PusherManager>();
     void Start()
     {
         m_EventSystem = EventSystem.current;
@@ -54,4 +58,12 @@ public class MenuScript : MonoBehaviour
         UnityEngine.tvOS.Remote.allowExitToHome = false;
         MenuPanel.SetActive(false);
     }
+
+    // public void StartButtonClick() {
+    //     Debug.Log("Start Button Clicked");
+    //     Pusher.Start();
+    // }
+
+
+
 }

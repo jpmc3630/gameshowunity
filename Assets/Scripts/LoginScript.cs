@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using BestHTTP;
 using System;
-using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
@@ -51,7 +50,7 @@ public class LoginScript : MonoBehaviour
     public GameObject MenuPanel;
     EventSystem m_EventSystem;
     
-    public const string baseUrl = "https://bdeb-61-245-129-196.au.ngrok.io";
+    public const string baseUrl = "https://8c9d-61-245-129-196.au.ngrok.io";
     
     // Start is called before the first frame update
     void Start()
@@ -120,6 +119,13 @@ public class LoginScript : MonoBehaviour
         LoginPanel.SetActive(false);
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(LogoutButton);
+
+        // HTTPRequest request = new HTTPRequest(new Uri(baseUrl + "/api/thetoken"), HTTPMethods.Post, OnLoginRequestFinished);
+        // request.SetHeader("Accept", "application/json");
+        // request.AddField("the_token", json);
+        // // request.AddField("password", PasswordField.text);
+        // // request.AddField("device_name", SystemInfo.deviceModel);
+        // request.Send();
     }
     
     public void logout() {

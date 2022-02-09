@@ -48,7 +48,7 @@ public Text my_text;
             {
                 Cluster = APP_CLUSTER,
                 Encrypted = true,
-                // Authorizer = new FakeAuthoriser()
+                Authorizer = new MyAuthorizer("https://8c9d-61-245-129-196.au.ngrok.io/broadcasting/auth")
             });
 
             // _pusher.Error += OnPusherOnError;
@@ -56,7 +56,7 @@ public Text my_text;
             _pusher.Connected += PusherOnConnected;
 
             // Subscribe
-            _channel = await _pusher.SubscribeAsync("my-channel");
+            _channel = await _pusher.SubscribeAsync("private-my-channel");
             // _channel = await _pusher.SubscribeAsync("private-chat-channel-1").ConfigureAwait(false);
             // Assert.AreEqual(false, _channel.IsSubscribed);
 
@@ -75,20 +75,39 @@ public Text my_text;
     private void PusherOnConnected(object sender)
     {
         Debug.Log("Connected");
-        _channel.Bind("my-event", (String data) =>
+
+        _channel.Bind("client-my-event", (String data) =>
         {
-                // var theData = data.ToString()
-                //     .Replace("\\\"", "\"")
-                //     .Replace("\"{", "{")
-                //     .Replace("}\"", "}");
-                // var received = JsonConvert.DeserializeObject<ChatMessage>(theData);
-                // if (received != null)
-                // {
-                    // TheDispatcher.RunOnMainThread(() => AddMessage(received.Data.Message, received.Data.Name));
-                // MessageText.text = "my-event received";
-            // Debug.Log("my-event received");
-            Debug.Log("----------------------------------------------------------------------Message Recieved---------------------------------------------------------------");
+          Debug.Log("----------------------------------------------------------------------Message Recieved---------------------------------------------------------------");
+            // try
+            // {
+            //     var theData = data.ToString()
+            //         .Replace("\\\"", "\"")
+            //         .Replace("\"{", "{")
+            //         .Replace("}\"", "}");
+            //     var received = JsonConvert.DeserializeObject<ChatMessage>(theData);
+            //     if (received != null)
+            //     {   
+            //         TheDispatcher.RunOnMainThread(() => AddMessage(received.Data.Message, received.Data.Name));
+            //     }
+            // }
+            // catch(Exception ex)
+            // { }
         });
+        // _channel.Bind("my-event", (String data) =>
+        // {
+        //         // var theData = data.ToString()
+        //         //     .Replace("\\\"", "\"")
+        //         //     .Replace("\"{", "{")
+        //         //     .Replace("}\"", "}");
+        //         // var received = JsonConvert.DeserializeObject<ChatMessage>(theData);
+        //         // if (received != null)
+        //         // {
+        //             // TheDispatcher.RunOnMainThread(() => AddMessage(received.Data.Message, received.Data.Name));
+        //         // MessageText.text = "my-event received";
+        //     // Debug.Log("my-event received");
+        //     Debug.Log("----------------------------------------------------------------------Message Recieved---------------------------------------------------------------");
+        // });
     }
 
 // private static void PushData(PusherAction action, string eventName, dynamic data)
@@ -131,6 +150,32 @@ public Text my_text;
         {
             await _pusher.DisconnectAsync();
         }
+    }
+}
+
+
+public class MyAuthorizer : IAuthorizer
+{
+    private Uri _authEndpoint;
+    public MyAuthorizer (string authEndpoint)
+    {
+        _authEndpoint = new Uri(authEndpoint);
+    }
+
+    public string Authorize(string channelName, string socketId)
+    {
+        string authToken = null;
+
+        using (var webClient = new System.Net.WebClient())
+        {
+            string data = String.Format("channel_name={0}&socket_id={1}", channelName, socketId);
+            webClient.Headers.Set("Content-Type", "application/x-www-form-urlencoded");
+            webClient.Headers.Add("Accept", "application/json");
+            // webClient.Headers.Add("Authorization", "Bearer 1|AfT4WRoTqLfgaDZhX2pxb7wLI748AIHuCPCZuF2K"); // my computer
+            webClient.Headers.Add("Authorization", "Bearer 69|wxOYwVDprAwuWYvXV4p7XYeTPmk3gujCfxHXBJNP"); // tvos
+            authToken = webClient.UploadString(_authEndpoint, "POST", data);
+        }
+        return authToken;
     }
 }
 

@@ -10,8 +10,8 @@ public static class CreateAxesEditor
 
     static CreateAxesEditor()
     {
-        EditorApplication.hierarchyWindowChanged += OnHierarchyChange;
-        EditorApplication.hierarchyWindowChanged += addOtherExamplesToBuildSettings;
+        EditorApplication.hierarchyChanged += OnHierarchyChange;
+        EditorApplication.hierarchyChanged += addOtherExamplesToBuildSettings;
     }
 
     static void addOtherExamplesToBuildSettings()
@@ -34,7 +34,7 @@ public static class CreateAxesEditor
             EditorBuildSettings.scenes = newBuildSettings;
 
             //we only need to execute once           
-            EditorApplication.hierarchyWindowChanged -= addOtherExamplesToBuildSettings;
+            EditorApplication.hierarchyChanged -= addOtherExamplesToBuildSettings;
         }
     }
     static void OnHierarchyChange()
@@ -838,7 +838,7 @@ public static class CreateAxesEditor
 
 
         //we only need to execute once           
-        EditorApplication.hierarchyWindowChanged -= OnHierarchyChange;
+        EditorApplication.hierarchyChanged -= OnHierarchyChange;
         
 
     }

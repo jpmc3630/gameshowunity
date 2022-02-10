@@ -44,19 +44,21 @@ public class LoginScript : MonoBehaviour
     public Text UserText;
     public InputField EmailField;
     public InputField PasswordField;
-    public GameObject LogoutButton;
+    // public GameObject LogoutButton;
     public GameObject LoginPanel;
     public GameObject SettingsPanel;
     public GameObject MenuPanel;
+    public GameObject LobbyPanel;
+    public GameObject StartGameButton;
     EventSystem m_EventSystem;
     
-    public const string baseUrl = "https://8c9d-61-245-129-196.au.ngrok.io";
+    public const string baseUrl = "https://be7b-61-245-129-196.au.ngrok.io";
     
     // Start is called before the first frame update
     void Start()
     {
         m_EventSystem = EventSystem.current;
-        this.isLoggedIn();
+        this.getUser();
     }
 
     public void LoginButton() {
@@ -83,9 +85,8 @@ public class LoginScript : MonoBehaviour
         Debug.Log("Forgot Password Button");
     }
 
-    public void isLoggedIn() {
+    public void getUser() {
         Debug.Log("Checking for stored token...");
-
         if (PlayerPrefs.HasKey("user")) {
             String userString = PlayerPrefs.GetString("user", null);
             Debug.Log("userString: " + userString);
@@ -96,12 +97,27 @@ public class LoginScript : MonoBehaviour
             }
         } else {
             LoginPanel.SetActive(true);
+            m_EventSystem.SetSelectedGameObject(null);
+            m_EventSystem.SetSelectedGameObject(EmailField.gameObject);
         }
     }
 
-    public void authenticateUser(String token) {
-        Debug.Log("Device model: " + SystemInfo.deviceModel);
+    public Boolean isLoggedIn () {
+        Debug.Log("isLoggedIn running...");
+        if (PlayerPrefs.HasKey("user")) {
+            String userString = PlayerPrefs.GetString("user", null);
+            if (userString != null) {
+                user = JsonUtility.FromJson<userObject>(userString);
+                if (user.token != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    public void authenticateUser(String token) {
+        Debug.Log("Authenticating user...");
         HTTPRequest request = new HTTPRequest(new Uri(baseUrl + "/api/user"), onAuthRequestFinished);
         request.SetHeader("Accept", "application/json");
         request.SetHeader("Authorization", "Bearer " + token);
@@ -115,23 +131,17 @@ public class LoginScript : MonoBehaviour
         UserText.text = user.email;
         MessageText.text = "";
         DumpToConsole(user);
-        LogoutButton.SetActive(true);
+        // LogoutButton.SetActive(true);
         LoginPanel.SetActive(false);
+        LobbyPanel.SetActive(true);
         m_EventSystem.SetSelectedGameObject(null);
-        m_EventSystem.SetSelectedGameObject(LogoutButton);
-
-        // HTTPRequest request = new HTTPRequest(new Uri(baseUrl + "/api/thetoken"), HTTPMethods.Post, OnLoginRequestFinished);
-        // request.SetHeader("Accept", "application/json");
-        // request.AddField("the_token", json);
-        // // request.AddField("password", PasswordField.text);
-        // // request.AddField("device_name", SystemInfo.deviceModel);
-        // request.Send();
+        m_EventSystem.SetSelectedGameObject(StartGameButton.gameObject);
     }
     
     public void logout() {
         Debug.Log("Logging out!");
         PlayerPrefs.DeleteKey("user");
-        UserText.text = "";
+        UserText.text = "Not currently logged in!";
         SettingsPanel.SetActive(false);
         MenuPanel.SetActive(false);
         LoginPanel.SetActive(true);
@@ -192,6 +202,8 @@ public class LoginScript : MonoBehaviour
       } else {
           Debug.Log("Failed to authenticate user - Error: " + response.StatusCode);
           LoginPanel.SetActive(true);
+          m_EventSystem.SetSelectedGameObject(null);
+          m_EventSystem.SetSelectedGameObject(EmailField.gameObject);
       }
     }
 

@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 
 public class PusherManager : MonoBehaviour
 {
-    public Text MessageText;
     // A mutation of https://unity3d.com/learn/tutorials/projects/2d-roguelike-tutorial/writing-game-manager
     public static PusherManager instance = null;
     private Pusher _pusher;
@@ -34,8 +33,6 @@ public Text my_text;
         }
         DontDestroyOnLoad(gameObject);
         await InitialisePusher();
-        Console.WriteLine("Starting");
-        MessageText.text = "The start";
     }
 
     private async Task InitialisePusher()
@@ -48,7 +45,7 @@ public Text my_text;
             {
                 Cluster = APP_CLUSTER,
                 Encrypted = true,
-                Authorizer = new MyAuthorizer("https://8c9d-61-245-129-196.au.ngrok.io/broadcasting/auth")
+                Authorizer = new MyAuthorizer("https://be7b-61-245-129-196.au.ngrok.io/broadcasting/auth")
             });
 
             // _pusher.Error += OnPusherOnError;
@@ -79,7 +76,7 @@ public Text my_text;
         _channel.Bind("client-my-event", (String data) =>
         {
 
-          Debug.Log("----------------------------------------------------------------------Message Recieved---------------------------------------------------------------");
+          Debug.Log("--------------------------------------------------------------------Client Message Recieved ---------------------------------------------------------");
           Debug.Log(data);
           
             // try
@@ -97,20 +94,33 @@ public Text my_text;
             // catch(Exception ex)
             // { }
         });
-        // _channel.Bind("my-event", (String data) =>
-        // {
-        //         // var theData = data.ToString()
-        //         //     .Replace("\\\"", "\"")
-        //         //     .Replace("\"{", "{")
-        //         //     .Replace("}\"", "}");
-        //         // var received = JsonConvert.DeserializeObject<ChatMessage>(theData);
-        //         // if (received != null)
-        //         // {
-        //             // TheDispatcher.RunOnMainThread(() => AddMessage(received.Data.Message, received.Data.Name));
-        //         // MessageText.text = "my-event received";
-        //     // Debug.Log("my-event received");
-        //     Debug.Log("----------------------------------------------------------------------Message Recieved---------------------------------------------------------------");
-        // });
+        _channel.Bind("my-event", (String data) =>
+        {
+                // var theData = data.ToString()
+                //     .Replace("\\\"", "\"")
+                //     .Replace("\"{", "{")
+                //     .Replace("}\"", "}");
+                // var received = JsonConvert.DeserializeObject<ChatMessage>(theData);
+                // if (received != null)
+                // {
+                    // TheDispatcher.RunOnMainThread(() => AddMessage(received.Data.Message, received.Data.Name));
+                // MessageText.text = "my-event received";
+            // Debug.Log("my-event received");
+            Debug.Log("------------------------------------------------------------------Server Message Recieved ---------------------------------------------------------");
+        });
+    }
+
+    public void MyTriggerEvent()
+    {
+        MessageToSend messageToSend = new MessageToSend
+        {
+            ChannelId = "private-my-channel",
+            Message = "I am a TV",
+            SocketId = _pusher.SocketID,
+            UserId = "DrTvOS"
+        };
+        _channel.Trigger("client-my-event", messageToSend);
+        Debug.Log("---------------------------------------------------------------------Triggering client event ---------------------------------------------------");
     }
 
 // private static void PushData(PusherAction action, string eventName, dynamic data)
@@ -195,3 +205,12 @@ public class MyAuthorizer : IAuthorizer
 //     public DateTime When { get; set; }
 //     public string Channel { get; set; }
 // }
+
+[Serializable]
+public class MessageToSend
+{
+    public String ChannelId;
+    public String Message;
+    public String SocketId;
+    public String UserId;
+}

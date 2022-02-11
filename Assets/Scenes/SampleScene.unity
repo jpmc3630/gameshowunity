@@ -134,13 +134,14 @@ GameObject:
   - component: {fileID: 206678}
   - component: {fileID: 206680}
   - component: {fileID: 206679}
+  - component: {fileID: 206681}
   m_Layer: 5
   m_Name: LobbyPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &206678
 RectTransform:
   m_ObjectHideFlags: 0
@@ -202,6 +203,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206677}
   m_CullTransparentMesh: 1
+--- !u!225 &206681
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206677}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &182970333
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +419,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: aaaaaaaaaaaaaaaaaaaaaaaa
+  m_Text: 
 --- !u!222 &227005747
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1703,7 +1716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 258384734}
+  m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &550840545
@@ -1884,14 +1897,14 @@ GameObject:
   - component: {fileID: 757773137}
   - component: {fileID: 757773140}
   - component: {fileID: 757773139}
-  - component: {fileID: 757773138}
+  - component: {fileID: 757773141}
   m_Layer: 5
   m_Name: MenuPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &757773137
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1914,26 +1927,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 907.28, y: -719.4117}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &757773138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 757773136}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 872b46eaada6d4446935ec59668fa542, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MessageText: {fileID: 793901719}
-  UserText: {fileID: 265144137}
-  EmailField: {fileID: 0}
-  PasswordField: {fileID: 0}
-  LogoutButton: {fileID: 1022351801}
-  LoginPanel: {fileID: 0}
-  SettingsPanel: {fileID: 0}
-  MenuPanel: {fileID: 0}
 --- !u!114 &757773139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1969,6 +1962,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 757773136}
   m_CullTransparentMesh: 1
+--- !u!225 &757773141
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757773136}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &793901718
 GameObject:
   m_ObjectHideFlags: 0
@@ -2079,7 +2084,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxPressLength: 0.1
   requiredSwipeLength: 0.4
-  maxQuickTapTime: 0.2
+  maxQuickTapTime: 1.41
   minLongTapTime: 1
   maxDoubleTapTime: 0.5
   titleScreen: 0
@@ -2661,7 +2666,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1984934832}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LoginScript, Assembly-CSharp
         m_MethodName: LoginButton
         m_Mode: 1
@@ -2774,7 +2779,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1984934832}
+      - m_Target: {fileID: 1604910999}
         m_TargetAssemblyTypeName: LoginScript, Assembly-CSharp
         m_MethodName: logout
         m_Mode: 1
@@ -2927,7 +2932,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1984934832}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LoginScript, Assembly-CSharp
         m_MethodName: ForgotPasswordButton
         m_Mode: 1
@@ -3273,7 +3278,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1984934832}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LoginScript, Assembly-CSharp
         m_MethodName: RegisterAndLoginButton
         m_Mode: 1
@@ -3415,14 +3420,14 @@ GameObject:
   - component: {fileID: 1468393219}
   - component: {fileID: 1468393222}
   - component: {fileID: 1468393221}
-  - component: {fileID: 1468393220}
+  - component: {fileID: 1468393223}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1468393219
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3447,26 +3452,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 907.28, y: -604.1558}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1468393220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1468393218}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 872b46eaada6d4446935ec59668fa542, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MessageText: {fileID: 0}
-  UserText: {fileID: 265144137}
-  EmailField: {fileID: 0}
-  PasswordField: {fileID: 0}
-  LogoutButton: {fileID: 1022351801}
-  LoginPanel: {fileID: 0}
-  SettingsPanel: {fileID: 0}
-  MenuPanel: {fileID: 0}
 --- !u!114 &1468393221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3502,6 +3487,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1468393218}
   m_CullTransparentMesh: 1
+--- !u!225 &1468393223
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468393218}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1604910991
 GameObject:
   m_ObjectHideFlags: 0
@@ -3517,6 +3514,7 @@ GameObject:
   - component: {fileID: 1604910996}
   - component: {fileID: 1604910997}
   - component: {fileID: 1604910998}
+  - component: {fileID: 1604910999}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3670,11 +3668,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6abea9911bf324c3f9faf147479d9112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Canvas: {fileID: 1604910991}
   StartButton: {fileID: 258384734}
+  LobbyPanel: {fileID: 206677}
   SettingsPanel: {fileID: 1468393218}
   MenuPanel: {fileID: 757773136}
-  LogoutButton: {fileID: 1022351801}
+  StartGameButton: {fileID: 258384734}
   LoginPanel: {fileID: 1984934828}
+  EmailField: {fileID: 320482647}
   BackToMenuButton: {fileID: 268862078}
   ResumeGameButton: {fileID: 907525880}
 --- !u!114 &1604910998
@@ -3689,8 +3690,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e7bdfe1070d9470b8f64c255702852c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MessageText: {fileID: 227005746}
   my_text: {fileID: 227005746}
+--- !u!114 &1604910999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604910991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 872b46eaada6d4446935ec59668fa542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MessageText: {fileID: 227005746}
+  UserText: {fileID: 265144137}
+  EmailField: {fileID: 320482649}
+  PasswordField: {fileID: 1610623718}
+  LoginPanel: {fileID: 1984934828}
+  SettingsPanel: {fileID: 1468393218}
+  MenuPanel: {fileID: 757773136}
+  LobbyPanel: {fileID: 206677}
+  StartGameButton: {fileID: 258384734}
 --- !u!1 &1610623716
 GameObject:
   m_ObjectHideFlags: 0
@@ -4784,14 +4805,14 @@ GameObject:
   - component: {fileID: 1984934829}
   - component: {fileID: 1984934831}
   - component: {fileID: 1984934830}
-  - component: {fileID: 1984934832}
+  - component: {fileID: 1984934833}
   m_Layer: 5
   m_Name: LoginPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1984934829
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4853,26 +4874,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1984934828}
   m_CullTransparentMesh: 1
---- !u!114 &1984934832
-MonoBehaviour:
+--- !u!225 &1984934833
+CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1984934828}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 872b46eaada6d4446935ec59668fa542, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MessageText: {fileID: 227005746}
-  UserText: {fileID: 265144137}
-  EmailField: {fileID: 320482649}
-  PasswordField: {fileID: 1610623718}
-  LogoutButton: {fileID: 1022351801}
-  LoginPanel: {fileID: 1984934828}
-  SettingsPanel: {fileID: 0}
-  MenuPanel: {fileID: 0}
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2000024543
 GameObject:
   m_ObjectHideFlags: 0

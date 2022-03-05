@@ -645,9 +645,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1604910997}
-        m_TargetAssemblyTypeName: MenuScript, Assembly-CSharp
-        m_MethodName: StartButtonClick
+      - m_Target: {fileID: 1604910998}
+        m_TargetAssemblyTypeName: PusherManager, Assembly-CSharp
+        m_MethodName: MyTriggerEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1695,7 +1695,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 550840542}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbc36dd0b7c79e04ba99177a99a3213f, type: 3}
   m_Name: 
@@ -1716,7 +1716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 258384734}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &550840545
@@ -1740,7 +1740,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 550840542}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
@@ -2666,7 +2666,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1604910999}
         m_TargetAssemblyTypeName: LoginScript, Assembly-CSharp
         m_MethodName: LoginButton
         m_Mode: 1
@@ -2932,7 +2932,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1604910999}
         m_TargetAssemblyTypeName: LoginScript, Assembly-CSharp
         m_MethodName: ForgotPasswordButton
         m_Mode: 1
@@ -3278,7 +3278,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1604910999}
         m_TargetAssemblyTypeName: LoginScript, Assembly-CSharp
         m_MethodName: RegisterAndLoginButton
         m_Mode: 1
@@ -3690,6 +3690,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e7bdfe1070d9470b8f64c255702852c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Room: 
+  JoinCodeText: {fileID: 243336461}
   my_text: {fileID: 227005746}
 --- !u!114 &1604910999
 MonoBehaviour:

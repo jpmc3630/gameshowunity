@@ -52,7 +52,7 @@ public class LoginScript : MonoBehaviour
     public GameObject StartGameButton;
     EventSystem m_EventSystem;
     
-    public const string baseUrl = "https://be7b-61-245-129-196.au.ngrok.io";
+    public const string baseUrl = "https://15e0-61-245-129-196.au.ngrok.io";
     
     // Start is called before the first frame update
     void Start()

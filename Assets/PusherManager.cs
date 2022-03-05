@@ -8,17 +8,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
+using BestHTTP;
+
 using Newtonsoft.Json;
+using TMPro;
 
 public class PusherManager : MonoBehaviour
 {
     // A mutation of https://unity3d.com/learn/tutorials/projects/2d-roguelike-tutorial/writing-game-manager
     public static PusherManager instance = null;
+    public String Room;
+    public TextMeshProUGUI JoinCodeText;
     private Pusher _pusher;
     private Channel _channel;
     private const string APP_KEY = "81019b1380702f6af7e4";
     private const string APP_CLUSTER = "ap4";
 
+  public const string baseUrl = "https://15e0-61-245-129-196.au.ngrok.io";
+  public const string token = "1|R8Gize55jT26Uj8hrXP7UuSgrn8IKTTXT2Vk6pYd";
 public Text my_text;
 
     async Task Start()
@@ -31,7 +38,7 @@ public Text my_text;
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject); <----------------------- this causing bug?
         await InitialisePusher();
     }
 
@@ -45,23 +52,42 @@ public Text my_text;
             {
                 Cluster = APP_CLUSTER,
                 Encrypted = true,
-                Authorizer = new MyAuthorizer("https://be7b-61-245-129-196.au.ngrok.io/broadcasting/auth")
+                Authorizer = new MyAuthorizer(baseUrl + "/broadcasting/auth")
             });
 
             // _pusher.Error += OnPusherOnError;
             _pusher.ConnectionStateChanged += PusherOnConnectionStateChanged;
             _pusher.Connected += PusherOnConnected;
 
-            // Subscribe
-            _channel = await _pusher.SubscribeAsync("private-my-channel");
-            // _channel = await _pusher.SubscribeAsync("private-chat-channel-1").ConfigureAwait(false);
-            // Assert.AreEqual(false, _channel.IsSubscribed);
+            
+            // Create the room - Send http request to create our room and get the name of room back
+            Debug.Log("Requesting create room...");
+            var request = new HTTPRequest(new Uri(baseUrl + "/api/new-room"));
+            request.SetHeader("Accept", "application/json");
+            request.SetHeader("Authorization", "Bearer " + token);
+            
+            string result = await request.GetAsStringAsync();
+            Debug.Log("Room name is: " + result);
+            Room = result;
 
-			      _pusher.Subscribed += OnChannelOnSubscribed;
+            // Display it
+            JoinCodeText.text = Room;
 
-            // Connect
-            await _pusher.ConnectAsync();
-            // await _pusher.ConnectAsync().ConfigureAwait(false);
+            // Subscribe to it
+
+              // if (response.StatusCode == 200) {
+                  _channel = await _pusher.SubscribeAsync("private-" + result);
+
+                  // _channel = await _pusher.SubscribeAsync("private-chat-channel-1").ConfigureAwait(false);
+                  // Assert.AreEqual(false, _channel.IsSubscribed);
+
+                  _pusher.Subscribed += OnChannelOnSubscribed;
+
+                  // Connect
+                  await _pusher.ConnectAsync();
+                  // await _pusher.ConnectAsync().ConfigureAwait(false);
+              // }
+
         }
         else
         {
@@ -114,8 +140,8 @@ public Text my_text;
     {
         MessageToSend messageToSend = new MessageToSend
         {
-            ChannelId = "private-my-channel",
-            Message = "I am a TV",
+            ChannelId = "private-setup-channel",
+            Message = "Room",
             SocketId = _pusher.SocketID,
             UserId = "DrTvOS"
         };
@@ -164,6 +190,18 @@ public Text my_text;
             await _pusher.DisconnectAsync();
         }
     }
+
+    private string generateRoomName()
+    {
+        // return "room-" + Guid.NewGuid().ToString().Substring(0, 5);
+        String myString = "";
+        const string glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for(int i=0; i<4; i++)
+        {
+             myString += glyphs[UnityEngine.Random.Range(0, glyphs.Length)];
+        }
+        return myString;
+    }
 }
 
 
@@ -185,7 +223,7 @@ public class MyAuthorizer : IAuthorizer
             webClient.Headers.Set("Content-Type", "application/x-www-form-urlencoded");
             webClient.Headers.Add("Accept", "application/json");
             // webClient.Headers.Add("Authorization", "Bearer 1|AfT4WRoTqLfgaDZhX2pxb7wLI748AIHuCPCZuF2K"); // my computer
-            webClient.Headers.Add("Authorization", "Bearer 69|wxOYwVDprAwuWYvXV4p7XYeTPmk3gujCfxHXBJNP"); // tvos
+            webClient.Headers.Add("Authorization", "Bearer 1|R8Gize55jT26Uj8hrXP7UuSgrn8IKTTXT2Vk6pYd"); // tvos
             authToken = webClient.UploadString(_authEndpoint, "POST", data);
         }
         return authToken;

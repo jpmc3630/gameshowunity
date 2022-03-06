@@ -25,7 +25,8 @@ public class PusherManager : MonoBehaviour
     private const string APP_CLUSTER = "ap4";
 
   public const string baseUrl = "https://15e0-61-245-129-196.au.ngrok.io";
-  public const string token = "1|R8Gize55jT26Uj8hrXP7UuSgrn8IKTTXT2Vk6pYd";
+  public const string token = "12|vSN7TDH6vtNVR0UsL3XBk8gAZxifCdZVwfHYcnAD";
+  // public const string token = "2|UlmCGWzUkudeOnMloRpMJR1vGrJtuQzSM7JupTOE";
 public Text my_text;
 
     async Task Start()
@@ -66,17 +67,26 @@ public Text my_text;
             request.SetHeader("Accept", "application/json");
             request.SetHeader("Authorization", "Bearer " + token);
             
+            try {
             string result = await request.GetAsStringAsync();
+
+
             Debug.Log("Room name is: " + result);
             Room = result;
 
-            // Display it
+            } catch(Exception ex)
+            {
+                Debug.Log("Create room request failed:");
+                Debug.LogException(ex);
+            }
+
+            // Display the room name
             JoinCodeText.text = Room;
 
-            // Subscribe to it
+            // Subscribe to the room
 
-              // if (response.StatusCode == 200) {
-                  _channel = await _pusher.SubscribeAsync("private-" + result);
+                Debug.Log("Subscribing to: " + "presence-" + Room);
+                  _channel = await _pusher.SubscribeAsync("presence-" + Room);
 
                   // _channel = await _pusher.SubscribeAsync("private-chat-channel-1").ConfigureAwait(false);
                   // Assert.AreEqual(false, _channel.IsSubscribed);
@@ -98,6 +108,21 @@ public Text my_text;
     private void PusherOnConnected(object sender)
     {
         Debug.Log("Connected");
+
+            // _channel.Bind("pusher:member_added", (String member) => {
+            //   // For example
+            //   // add_member(member.id, member.info);
+            //   Debug.Log("Member Joined:");
+            //   // Debug.Log("Member ID: " + member.id);
+            //   // Debug.Log("Member Info: " +  member.info);
+            // });
+
+            // _channel.Bind("pusher:member_removed", (String member) => {
+            //   // For example
+            //   Debug.Log("Member Left:");
+            //   // Debug.Log("Member ID: " + member.id);
+            //   // Debug.Log("Member Info: " +  member.info);
+            // });
 
         _channel.Bind("client-my-event", (String data) =>
         {
@@ -140,7 +165,7 @@ public Text my_text;
     {
         MessageToSend messageToSend = new MessageToSend
         {
-            ChannelId = "private-setup-channel",
+            ChannelId = "this-can-be-anything",
             Message = "Room",
             SocketId = _pusher.SocketID,
             UserId = "DrTvOS"
@@ -223,7 +248,7 @@ public class MyAuthorizer : IAuthorizer
             webClient.Headers.Set("Content-Type", "application/x-www-form-urlencoded");
             webClient.Headers.Add("Accept", "application/json");
             // webClient.Headers.Add("Authorization", "Bearer 1|AfT4WRoTqLfgaDZhX2pxb7wLI748AIHuCPCZuF2K"); // my computer
-            webClient.Headers.Add("Authorization", "Bearer 1|R8Gize55jT26Uj8hrXP7UuSgrn8IKTTXT2Vk6pYd"); // tvos
+            webClient.Headers.Add("Authorization", "Bearer 8|7k4AAxZuGlZbdRENbIHVC1R1lK4OIUqsfjyUM5Da"); // tvos
             authToken = webClient.UploadString(_authEndpoint, "POST", data);
         }
         return authToken;

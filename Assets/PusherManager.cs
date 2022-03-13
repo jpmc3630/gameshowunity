@@ -20,7 +20,7 @@ public class PusherManager : MonoBehaviour
     public String Room;
     public TextMeshProUGUI JoinCodeText;
     private Pusher _pusher;
-    private Channel _channel;
+    private GenericPresenceChannel<ChatMember> _channel;
     public string APP_KEY = "81019b1380702f6af7e4";
     public string APP_CLUSTER = "ap4";
 
@@ -90,8 +90,7 @@ public class PusherManager : MonoBehaviour
         // Subscribe to the room
         Debug.Log("Subscribing to: " + "presence-" + Room);
 
-          GenericPresenceChannel<ChatMember> _channel =
-            await _pusher.SubscribePresenceAsync<ChatMember>("presence-" + Room).ConfigureAwait(false);
+        _channel = await _pusher.SubscribePresenceAsync<ChatMember>("presence-" + Room).ConfigureAwait(false);
         _channel.MemberAdded += ChatMemberAdded;
         _channel.MemberRemoved += ChatMemberRemoved;
 

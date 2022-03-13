@@ -46,69 +46,89 @@ public class PusherManager : MonoBehaviour
     {
         //Environment.SetEnvironmentVariable("PREFER_DNS_IN_ADVANCE", "true");
 
-        // if (_pusher == null && (APP_KEY != "APP_KEY") && (APP_CLUSTER != "APP_CLUSTER"))
-        // {
-            if (token == null || baseUrl == null)
-            {
-                Debug.Log("No token or baseUrl, not starting Pusher");
-                return;
-            }
-            Debug.Log("Initialising pusher with token: " + token);
+        if (token == null || baseUrl == null)
+        {
+            Debug.Log("No token or baseUrl, not starting Pusher");
+            return;
+        }
+        Debug.Log("Initialising pusher with token: " + token);
 
-            _pusher = new Pusher(APP_KEY, new PusherOptions()
-            {
-                Cluster = APP_CLUSTER,
-                Encrypted = true,
-                Authorizer = new MyAuthorizer(baseUrl + "/broadcasting/auth")
-            });
+        _pusher = new Pusher(APP_KEY, new PusherOptions()
+        {
+            Cluster = APP_CLUSTER,
+            Encrypted = true,
+            Authorizer = new MyAuthorizer(baseUrl + "/broadcasting/auth")
+        });
 
-            // _pusher.Error += OnPusherOnError;
-            _pusher.ConnectionStateChanged += PusherOnConnectionStateChanged;
-            _pusher.Connected += PusherOnConnected;
+        // _pusher.Error += OnPusherOnError;
+        _pusher.ConnectionStateChanged += PusherOnConnectionStateChanged;
+        _pusher.Connected += PusherOnConnected;
 
-            
-            // Create the room - Send http request to create our room and get the name of room back
-            Debug.Log("Requesting create room...");
-            var request = new HTTPRequest(new Uri(baseUrl + "/api/new-room"));
-            request.SetHeader("Accept", "application/json");
-            request.SetHeader("Authorization", "Bearer " + token);
-            
-            try {
-            string result = await request.GetAsStringAsync();
+        
+        // Create the room - Send http request to create our room and get the name of room back
+        Debug.Log("Requesting create room...");
+        var request = new HTTPRequest(new Uri(baseUrl + "/api/new-room"));
+        request.SetHeader("Accept", "application/json");
+        request.SetHeader("Authorization", "Bearer " + token);
+        
+        try {
+        string result = await request.GetAsStringAsync();
 
 
-            Debug.Log("Room name is: " + result);
-            Room = result;
+        Debug.Log("Room name is: " + result);
+        Room = result;
 
-            } catch(Exception ex)
-            {
-                Debug.Log("Create room request failed:");
-                Debug.LogException(ex);
-            }
+        } catch(Exception ex)
+        {
+            Debug.Log("Create room request failed:");
+            Debug.LogException(ex);
+        }
 
-            // Display the room name
-            JoinCodeText.text = Room;
+        // Display the room name
+        JoinCodeText.text = Room;
 
-            // Subscribe to the room
+        // Subscribe to the room
+        Debug.Log("Subscribing to: " + "presence-" + Room);
 
-                Debug.Log("Subscribing to: " + "presence-" + Room);
-                  _channel = await _pusher.SubscribeAsync("presence-" + Room);
+          GenericPresenceChannel<ChatMember> _channel =
+            await _pusher.SubscribePresenceAsync<ChatMember>("presence-" + Room).ConfigureAwait(false);
+        _channel.MemberAdded += ChatMemberAdded;
+        _channel.MemberRemoved += ChatMemberRemoved;
 
-                  // _channel = await _pusher.SubscribeAsync("private-chat-channel-1").ConfigureAwait(false);
-                  // Assert.AreEqual(false, _channel.IsSubscribed);
+        // Assert.AreEqual(false, _channel.IsSubscribed);
+        _pusher.Subscribed += OnChannelOnSubscribed;
 
-                  _pusher.Subscribed += OnChannelOnSubscribed;
+        // Connect
+        await _pusher.ConnectAsync();
+        // await _pusher.ConnectAsync().ConfigureAwait(false);
+    }
 
-                  // Connect
-                  await _pusher.ConnectAsync();
-                  // await _pusher.ConnectAsync().ConfigureAwait(false);
-              // }
 
-        // }
-        // else
-        // {
-        //     Debug.LogError("APP_KEY and APP_CLUSTER must be correctly set. Find how to set it at https://dashboard.pusher.com");
-        // }
+    // Lists all current presence channel members
+    void ListMembers(GenericPresenceChannel<ChatMember> channel)
+    {
+        Dictionary<string, ChatMember> members = channel.GetMembers();
+        foreach (var member in members)
+        {
+            // Trace.TraceInformation($"Id: {member.Key}, Name: {member.Value.Name}");
+            Debug.Log($"Id: {member.Key}, Name: {member.Value.Name}");
+        }
+    }
+
+    // MemberAdded event handler
+    void ChatMemberAdded(object sender, KeyValuePair<string, ChatMember> member)
+    {
+        // Trace.TraceInformation($"Member {member.Value.Name} has joined");
+        Debug.Log($"Member {member.Value.Name} has joined");
+        ListMembers(sender as GenericPresenceChannel<ChatMember>);
+    }
+
+    // MemberRemoved event handler
+    void ChatMemberRemoved(object sender, KeyValuePair<string, ChatMember> member)
+    {
+        // Trace.TraceInformation($"Member {member.Value.Name} has left");
+        Debug.Log($"Member {member.Value.Name} has left");
+        ListMembers(sender as GenericPresenceChannel<ChatMember>);
     }
 
     private void PusherOnConnected(object sender)
@@ -274,6 +294,12 @@ public class MyAuthorizer : IAuthorizer
 //     public DateTime When { get; set; }
 //     public string Channel { get; set; }
 // }
+
+
+class ChatMember
+{
+    public string Name { get; set; }
+}
 
 [Serializable]
 public class MessageToSend

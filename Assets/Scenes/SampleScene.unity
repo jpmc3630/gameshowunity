@@ -3692,6 +3692,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Room: 
   JoinCodeText: {fileID: 243336461}
+  APP_KEY: 81019b1380702f6af7e4
+  APP_CLUSTER: ap4
+  baseUrl: 
+  token: 
   my_text: {fileID: 227005746}
 --- !u!114 &1604910999
 MonoBehaviour:
@@ -3705,6 +3709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 872b46eaada6d4446935ec59668fa542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pusherScript: {fileID: 1604910998}
   MessageText: {fileID: 227005746}
   UserText: {fileID: 265144137}
   EmailField: {fileID: 320482649}

@@ -39,6 +39,7 @@ public class errorsObject
 
 public class LoginScript : MonoBehaviour
 {
+    [SerializeField] private PusherManager pusherScript;
     private userObject user = new userObject();
     public Text MessageText;
     public Text UserText;
@@ -52,7 +53,7 @@ public class LoginScript : MonoBehaviour
     public GameObject StartGameButton;
     EventSystem m_EventSystem;
     
-    public const string baseUrl = "https://15e0-61-245-129-196.au.ngrok.io";
+    public const string baseUrl = "https://04e6-61-245-129-196.au.ngrok.io";
     
     // Start is called before the first frame update
     void Start()
@@ -124,7 +125,7 @@ public class LoginScript : MonoBehaviour
         request.Send();
     }
 
-    public void storeUser(userObject user) {
+    public async void storeUser(userObject user) {
         Debug.Log("Storing User:");
         String json = JsonUtility.ToJson(user);
         PlayerPrefs.SetString("user", json);
@@ -136,9 +137,14 @@ public class LoginScript : MonoBehaviour
         LobbyPanel.SetActive(true);
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(StartGameButton.gameObject);
+
+        PusherManager.instance.token = user.token;
+        PusherManager.instance.baseUrl = baseUrl;
+        await PusherManager.instance.InitialisePusher();
+
     }
     
-    public void logout() {
+    public async void logout() {
         Debug.Log("Logging out!");
         PlayerPrefs.DeleteKey("user");
         UserText.text = "Not currently logged in!";
@@ -147,6 +153,7 @@ public class LoginScript : MonoBehaviour
         LoginPanel.SetActive(true);
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(EmailField.gameObject);
+        await PusherManager.instance.OnApplicationQuit();
     }
 
     void showError(String responseText) {
@@ -212,5 +219,15 @@ public class LoginScript : MonoBehaviour
         var output = JsonUtility.ToJson(obj, true);
         Debug.Log(output);
     }
+
+
+ 
+    // public void enablePusherScript(token) {
+        // pusherScript.PusherManagerStart("12|vSN7TDH6vtNVR0UsL3XBk8gAZxifCdZVwfHYcnAD");
+    // }
+
+    // public void disablePusherScript() {
+    //     pusherScript.enabled = false;
+    // }
 
 }

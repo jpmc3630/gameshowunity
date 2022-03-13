@@ -21,15 +21,14 @@ public class PusherManager : MonoBehaviour
     public TextMeshProUGUI JoinCodeText;
     private Pusher _pusher;
     private Channel _channel;
-    private const string APP_KEY = "81019b1380702f6af7e4";
-    private const string APP_CLUSTER = "ap4";
+    public string APP_KEY = "81019b1380702f6af7e4";
+    public string APP_CLUSTER = "ap4";
 
-  public const string baseUrl = "https://15e0-61-245-129-196.au.ngrok.io";
-  public const string token = "12|vSN7TDH6vtNVR0UsL3XBk8gAZxifCdZVwfHYcnAD";
-  // public const string token = "2|UlmCGWzUkudeOnMloRpMJR1vGrJtuQzSM7JupTOE";
-public Text my_text;
+  public string baseUrl = null;
+  public string token = null;
+  public Text my_text;
 
-    async Task Start()
+    void Start()
     {
         if (instance == null)
         {
@@ -39,16 +38,23 @@ public Text my_text;
         {
             Destroy(gameObject);
         }
-        // DontDestroyOnLoad(gameObject); <----------------------- this causing bug?
-        await InitialisePusher();
+        DontDestroyOnLoad(gameObject); // <----------------------- this causing bug?
+        // await InitialisePusher();
     }
 
-    private async Task InitialisePusher()
+    public async Task InitialisePusher()
     {
         //Environment.SetEnvironmentVariable("PREFER_DNS_IN_ADVANCE", "true");
 
-        if (_pusher == null && (APP_KEY != "APP_KEY") && (APP_CLUSTER != "APP_CLUSTER"))
-        {
+        // if (_pusher == null && (APP_KEY != "APP_KEY") && (APP_CLUSTER != "APP_CLUSTER"))
+        // {
+            if (token == null || baseUrl == null)
+            {
+                Debug.Log("No token or baseUrl, not starting Pusher");
+                return;
+            }
+            Debug.Log("Initialising pusher with token: " + token);
+
             _pusher = new Pusher(APP_KEY, new PusherOptions()
             {
                 Cluster = APP_CLUSTER,
@@ -98,11 +104,11 @@ public Text my_text;
                   // await _pusher.ConnectAsync().ConfigureAwait(false);
               // }
 
-        }
-        else
-        {
-            Debug.LogError("APP_KEY and APP_CLUSTER must be correctly set. Find how to set it at https://dashboard.pusher.com");
-        }
+        // }
+        // else
+        // {
+        //     Debug.LogError("APP_KEY and APP_CLUSTER must be correctly set. Find how to set it at https://dashboard.pusher.com");
+        // }
     }
 
     private void PusherOnConnected(object sender)
@@ -208,7 +214,7 @@ public Text my_text;
         Debug.Log("----------------------------------------------------------------------Subscribed---------------------------------------------------------------");
     }
 
-    async Task OnApplicationQuit()
+    public async Task OnApplicationQuit()
     {
         if (_pusher != null)
         {

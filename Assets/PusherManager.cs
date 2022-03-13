@@ -120,7 +120,7 @@ public class PusherManager : MonoBehaviour
     {
         // Trace.TraceInformation($"Member {member.Value.Name} has joined");
         Debug.Log($"Member {member.Value.Name} has joined");
-        ListMembers(sender as GenericPresenceChannel<ChatMember>);
+        // ListMembers(sender as GenericPresenceChannel<ChatMember>);
     }
 
     // MemberRemoved event handler
@@ -128,7 +128,7 @@ public class PusherManager : MonoBehaviour
     {
         // Trace.TraceInformation($"Member {member.Value.Name} has left");
         Debug.Log($"Member {member.Value.Name} has left");
-        ListMembers(sender as GenericPresenceChannel<ChatMember>);
+        // ListMembers(sender as GenericPresenceChannel<ChatMember>);
     }
 
     private void PusherOnConnected(object sender)

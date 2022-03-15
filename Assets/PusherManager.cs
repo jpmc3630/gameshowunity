@@ -32,8 +32,6 @@ public class PusherManager : MonoBehaviour
     [SerializeField] private Transform playersList;
 
 
-  // public GameObject myPrefab;
-
     void Start()
     {
         if (instance == null)

@@ -137,10 +137,11 @@ public class PusherManager : MonoBehaviour
         Debug.Log(who);
         
         // Set message
-        GameObject newMessage = (GameObject)Instantiate(playerPrefab, playersList.transform);
+        GameObject newMessage = (GameObject)Instantiate(playerPrefab, playersList.transform.position + new Vector3(0.0f, -200.0f * playersList.childCount, 0.0f), playersList.transform.rotation);
         newMessage.transform.SetParent(playersList);
         newMessage.transform.SetSiblingIndex(playersList.childCount - 2);
-        
+
+        Debug.Log("playersList.childCount: " + playersList.childCount);
         var texts = newMessage.GetComponentsInChildren<Text>();
         Debug.Log(texts);
         if (texts != null

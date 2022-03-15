@@ -28,6 +28,12 @@ public class PusherManager : MonoBehaviour
   public string token = null;
   public Text my_text;
 
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private Transform playersList;
+
+
+  // public GameObject myPrefab;
+
     void Start()
     {
         if (instance == null)
@@ -120,6 +126,28 @@ public class PusherManager : MonoBehaviour
         // Trace.TraceInformation($"Member {member.Value.Name} has joined");
         Debug.Log($"Member {member.Value.Name} has joined");
         // ListMembers(sender as GenericPresenceChannel<ChatMember>);
+
+        TheDispatcher.RunOnMainThread(() => AddPlayer(member.Value.Name));
+
+    }
+
+        private void AddPlayer(string who)
+    {
+        Debug.Log("Adding message func runing...");
+        Debug.Log(who);
+        
+        // Set message
+        GameObject newMessage = (GameObject)Instantiate(playerPrefab, playersList.transform);
+        newMessage.transform.SetParent(playersList);
+        newMessage.transform.SetSiblingIndex(playersList.childCount - 2);
+        
+        var texts = newMessage.GetComponentsInChildren<Text>();
+        Debug.Log(texts);
+        if (texts != null
+            && texts.Length > 0)
+        {
+            texts[0].text = who;
+        }
     }
 
     // MemberRemoved event handler
@@ -164,7 +192,7 @@ public class PusherManager : MonoBehaviour
             //     var received = JsonConvert.DeserializeObject<ChatMessage>(theData);
             //     if (received != null)
             //     {   
-            //         TheDispatcher.RunOnMainThread(() => AddMessage(received.Data.Message, received.Data.Name));
+            //         TheDispatcher.RunOnMainThread(() => AddPlayer(received.Data.Message, received.Data.Name));
             //     }
             // }
             // catch(Exception ex)
@@ -179,7 +207,7 @@ public class PusherManager : MonoBehaviour
                 // var received = JsonConvert.DeserializeObject<ChatMessage>(theData);
                 // if (received != null)
                 // {
-                    // TheDispatcher.RunOnMainThread(() => AddMessage(received.Data.Message, received.Data.Name));
+                    // TheDispatcher.RunOnMainThread(() => AddPlayer(received.Data.Message, received.Data.Name));
                 // MessageText.text = "my-event received";
             // Debug.Log("my-event received");
             Debug.Log("------------------------------------------------------------------Server Message Recieved ---------------------------------------------------------");

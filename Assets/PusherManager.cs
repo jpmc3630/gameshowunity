@@ -20,9 +20,10 @@ public class PusherManager : MonoBehaviour
     public String Room;
     public TextMeshProUGUI JoinCodeText;
     private Pusher _pusher;
-    private GenericPresenceChannel<ChatMember> _channel;
+    private GenericPresenceChannel<Player> _channel;
     public string APP_KEY = "81019b1380702f6af7e4";
     public string APP_CLUSTER = "ap4";
+
 
   public string baseUrl = null;
   public string token = null;
@@ -94,9 +95,9 @@ public class PusherManager : MonoBehaviour
         // Subscribe to the room
         Debug.Log("Subscribing to: " + "presence-" + Room);
 
-        _channel = await _pusher.SubscribePresenceAsync<ChatMember>("presence-" + Room).ConfigureAwait(false);
-        _channel.MemberAdded += ChatMemberAdded;
-        _channel.MemberRemoved += ChatMemberRemoved;
+        _channel = await _pusher.SubscribePresenceAsync<Player>("presence-" + Room).ConfigureAwait(false);
+        _channel.MemberAdded += PlayerAdded;
+        _channel.MemberRemoved += PlayerRemoved;
 
         // Assert.AreEqual(false, _channel.IsSubscribed);
         _pusher.Subscribed += OnChannelOnSubscribed;
@@ -108,9 +109,9 @@ public class PusherManager : MonoBehaviour
 
 
     // Lists all current presence channel members
-    void ListMembers(GenericPresenceChannel<ChatMember> channel)
+    void ListMembers(GenericPresenceChannel<Player> channel)
     {
-        Dictionary<string, ChatMember> members = channel.GetMembers();
+        Dictionary<string, Player> members = channel.GetMembers();
         foreach (var member in members)
         {
             // Trace.TraceInformation($"Id: {member.Key}, Name: {member.Value.Name}");
@@ -119,22 +120,42 @@ public class PusherManager : MonoBehaviour
     }
 
     // MemberAdded event handler
-    void ChatMemberAdded(object sender, KeyValuePair<string, ChatMember> member)
+    void PlayerAdded(object sender, KeyValuePair<string, Player> player)
     {
         // Trace.TraceInformation($"Member {member.Value.Name} has joined");
-        Debug.Log($"Member {member.Value.Name} has joined");
-        // ListMembers(sender as GenericPresenceChannel<ChatMember>);
+        Debug.Log($"Member {player.Value.Name} has joined");
+        // ListMembers(sender as GenericPresenceChannel<Player>);
 
-        TheDispatcher.RunOnMainThread(() => AddPlayer(member.Value.Name));
+        Player newPlayer = new Player()
+        {
+            Name = player.Value.Name,
+            Id = player.Value.Id
+        };
+        // Debug.Log(player.Value.Name);
+        // Debug.Log(player.Value.Id);
+        // Debug.Log(player.Value.Score);
+
+        TheDispatcher.RunOnMainThread(() => AddPlayer(newPlayer));
 
     }
 
-        private void AddPlayer(string who)
+        private void AddPlayer(Player newPlayer)
     {
-        Debug.Log("Adding message func runing...");
-        Debug.Log(who);
         
-        // Set message
+        // adds player to state list
+        State.Instance.addPlayerToPlayerList(newPlayer);
+        
+        // todo:
+
+        // Add player removed method to remove player from State.playerList
+
+        // create a render method that updates the lobby scene with State.playerList
+        // and we can just call that at the end of adding or removing a player .. 
+        // from in here if we have to cos we have reference to the gameObject with the list?
+
+
+
+        // Sets player on stage
         GameObject newMessage = (GameObject)Instantiate(playerPrefab, playersList.transform.position + new Vector3(0.0f, -200.0f * playersList.childCount, 0.0f), playersList.transform.rotation);
         newMessage.transform.SetParent(playersList);
         newMessage.transform.SetSiblingIndex(playersList.childCount - 2);
@@ -145,16 +166,16 @@ public class PusherManager : MonoBehaviour
         if (texts != null
             && texts.Length > 0)
         {
-            texts[0].text = who;
+            texts[0].text = newPlayer.Name;
         }
     }
 
     // MemberRemoved event handler
-    void ChatMemberRemoved(object sender, KeyValuePair<string, ChatMember> member)
+    void PlayerRemoved(object sender, KeyValuePair<string, Player> member)
     {
         // Trace.TraceInformation($"Member {member.Value.Name} has left");
         Debug.Log($"Member {member.Value.Name} has left");
-        // ListMembers(sender as GenericPresenceChannel<ChatMember>);
+        // ListMembers(sender as GenericPresenceChannel<Player>);
     }
 
     private void PusherOnConnected(object sender)
@@ -181,7 +202,6 @@ public class PusherManager : MonoBehaviour
 
           Debug.Log("--------------------------------------------------------------------Client Message Recieved ---------------------------------------------------------");
           Debug.Log(data);
-          
             // try
             // {
             //     var theData = data.ToString()
@@ -322,10 +342,7 @@ public class MyAuthorizer : IAuthorizer
 // }
 
 
-class ChatMember
-{
-    public string Name { get; set; }
-}
+
 
 [Serializable]
 public class MessageToSend

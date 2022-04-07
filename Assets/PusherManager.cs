@@ -29,9 +29,6 @@ public class PusherManager : MonoBehaviour
   public string token = null;
   public Text my_text;
 
-    [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private Transform playersList;
-
 
     void Start()
     {
@@ -122,60 +119,18 @@ public class PusherManager : MonoBehaviour
     // MemberAdded event handler
     void PlayerAdded(object sender, KeyValuePair<string, Player> player)
     {
-        // Trace.TraceInformation($"Member {member.Value.Name} has joined");
-        Debug.Log($"Member {player.Value.Name} has joined");
-        // ListMembers(sender as GenericPresenceChannel<Player>);
-
         Player newPlayer = new Player()
         {
             Name = player.Value.Name,
             Id = player.Value.Id
         };
-        // Debug.Log(player.Value.Name);
-        // Debug.Log(player.Value.Id);
-        // Debug.Log(player.Value.Score);
-
-        TheDispatcher.RunOnMainThread(() => AddPlayer(newPlayer));
-
-    }
-
-        private void AddPlayer(Player newPlayer)
-    {
-        
-        // adds player to state list
-        State.Instance.addPlayerToPlayerList(newPlayer);
-        
-        // todo:
-
-        // Add player removed method to remove player from State.playerList
-
-        // create a render method that updates the lobby scene with State.playerList
-        // and we can just call that at the end of adding or removing a player .. 
-        // from in here if we have to cos we have reference to the gameObject with the list?
-
-
-
-        // Sets player on stage
-        GameObject newMessage = (GameObject)Instantiate(playerPrefab, playersList.transform.position + new Vector3(0.0f, -200.0f * playersList.childCount, 0.0f), playersList.transform.rotation);
-        newMessage.transform.SetParent(playersList);
-        newMessage.transform.SetSiblingIndex(playersList.childCount - 2);
-
-        Debug.Log("playersList.childCount: " + playersList.childCount);
-        var texts = newMessage.GetComponentsInChildren<Text>();
-        Debug.Log(texts);
-        if (texts != null
-            && texts.Length > 0)
-        {
-            texts[0].text = newPlayer.Name;
-        }
+        TheDispatcher.RunOnMainThread(() => State.Instance.addPlayerToPlayerList(newPlayer));
     }
 
     // MemberRemoved event handler
-    void PlayerRemoved(object sender, KeyValuePair<string, Player> member)
+    void PlayerRemoved(object sender, KeyValuePair<string, Player> player)
     {
-        // Trace.TraceInformation($"Member {member.Value.Name} has left");
-        Debug.Log($"Member {member.Value.Name} has left");
-        // ListMembers(sender as GenericPresenceChannel<Player>);
+        TheDispatcher.RunOnMainThread(() => State.Instance.removePlayerById(player.Value.Id));
     }
 
     private void PusherOnConnected(object sender)

@@ -3776,6 +3776,7 @@ GameObject:
   - component: {fileID: 1604911000}
   - component: {fileID: 1604910998}
   - component: {fileID: 1604910999}
+  - component: {fileID: 1604911001}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3958,8 +3959,6 @@ MonoBehaviour:
   baseUrl: 
   token: 
   my_text: {fileID: 227005746}
-  playerPrefab: {fileID: 1290401558156626013, guid: 72d2b978013b144128343a63eea523ba, type: 3}
-  playersList: {fileID: 725030402}
 --- !u!114 &1604910999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3972,7 +3971,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 872b46eaada6d4446935ec59668fa542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pusherScript: {fileID: 1604910998}
   MessageText: {fileID: 227005746}
   UserText: {fileID: 265144137}
   EmailField: {fileID: 320482649}
@@ -3994,6 +3992,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26f52146aecef471686b2a580e00b813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1604911001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604910991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95b3a6df6eac84985811582bfdec85b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 1290401558156626013, guid: 72d2b978013b144128343a63eea523ba, type: 3}
+  playersList: {fileID: 725030402}
 --- !u!1 &1610623716
 GameObject:
   m_ObjectHideFlags: 0

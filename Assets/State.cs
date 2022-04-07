@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 // using Newtonsoft.Json;
+// using static RenderScript;
 
 public sealed class State
 {
     // public bool testVar { get; set; }
-
+    public GameObject Canvas;
+    public string currentScreen;
     public List<Player> playerList = new List<Player> ();
     private static object _lockObj = new object();
     private static State instance;
@@ -42,52 +44,21 @@ public sealed class State
     }
  
     public void addPlayerToPlayerList(Player newPlayer) {
-      Debug.Log("yayayayayaayayay hello: " + newPlayer.Name);
+      Debug.Log("New Player Joined: " + newPlayer.Name);
       instance.playerList.Add(newPlayer);
-
-      for (int i=0; i< instance.playerList.Count; i++) {
-        Debug.Log(instance.playerList[i].Id + " - " + instance.playerList[i].Name);
-      }
-
-      // if we are in lobby, update the lobby playerList game object
-      
-      // instance.updateLobbyPlayerList();
-      // maybe we could move a render method in a MonoBehavior script called Renderers or something
+      GameObject.Find("Canvas").GetComponent<RenderScript>().redrawPlayerList();
     }
 
-    // private void updateLobbyPlayerList() {
-
-        // something like ...
-      // if (GameObject.Find("LobbyPlayerList") != null) {
-      //   GameObject.Find("LobbyPlayerList").GetComponent<LobbyPlayerList>().updatePlayerList();
-      // }
-
-    //     GameObject newMessage = (GameObject)UnityEngine.Object.Instantiate(playerPrefab, playersList.transform.position + new Vector3(0.0f, -200.0f * playersList.childCount, 0.0f), playersList.transform.rotation);
-    //     newMessage.transform.SetParent(playersList);
-    //     newMessage.transform.SetSiblingIndex(playersList.childCount - 2);
-
-    //     Debug.Log("playersList.childCount: " + playersList.childCount);
-    //     var texts = newMessage.GetComponentsInChildren<Text>();
-    //     Debug.Log(texts);
-    //     if (texts != null
-    //         && texts.Length > 0)
-    //     {
-    //         texts[0].text = newPlayer.Name;
-    //     }
-    // }
+    public void removePlayerById(String id) {
+      for (int i=0; i< instance.playerList.Count; i++) {
+        if (instance.playerList[i].Id == id) {
+          instance.playerList.RemoveAt(i);
+          break;
+        }
+      }
+      GameObject.Find("Canvas").GetComponent<RenderScript>().redrawPlayerList();
+    }
 }
-
-// class ChatMember
-// {
-//     public string Name { get; set; }
-// }
-
-// class Player
-// {
-//     public string Name { get; set; }
-//     public string Id { get; set; }
-//     public int Score { get; set; }
-// }
 
 public class Player
 {

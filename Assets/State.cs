@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using PusherClient;
 using UnityEngine;
 using UnityEngine.UI;
+using BestHTTP;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,10 @@ public sealed class State
     // public bool testVar { get; set; }
     public GameObject Canvas;
     public string currentScreen;
+
+    public string baseUrl = "https://fdac-61-245-129-196.au.ngrok.io";
+    public string token = null;
+
     public List<Player> playerList = new List<Player> ();
     private static object _lockObj = new object();
     private static State instance;
@@ -58,7 +63,10 @@ public sealed class State
       }
       GameObject.Find("Canvas").GetComponent<RenderScript>().redrawPlayerList();
     }
+
 }
+
+
 
 public class Player
 {

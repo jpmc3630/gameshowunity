@@ -53,7 +53,6 @@ public class LoginScript : MonoBehaviour
     public GameObject StartGameButton;
     EventSystem m_EventSystem;
     
-    public const string baseUrl = "https://ddb2-61-245-129-196.au.ngrok.io";
     
     // Start is called before the first frame update
     void Start()
@@ -64,7 +63,7 @@ public class LoginScript : MonoBehaviour
 
     public void LoginButton() {
         Debug.Log("Login");
-        HTTPRequest request = new HTTPRequest(new Uri(baseUrl + "/api/login"), HTTPMethods.Post, OnLoginRequestFinished);
+        HTTPRequest request = new HTTPRequest(new Uri(State.Instance.baseUrl + "/api/login"), HTTPMethods.Post, OnLoginRequestFinished);
         request.SetHeader("Accept", "application/json");
         request.AddField("email", EmailField.text);
         request.AddField("password", PasswordField.text);
@@ -74,7 +73,7 @@ public class LoginScript : MonoBehaviour
 
     public void RegisterAndLoginButton() {
         Debug.Log("Register and Login");
-        HTTPRequest request = new HTTPRequest(new Uri(baseUrl + "/api/register"), HTTPMethods.Post, OnRegisterRequestFinished);
+        HTTPRequest request = new HTTPRequest(new Uri(State.Instance.baseUrl + "/api/register"), HTTPMethods.Post, OnRegisterRequestFinished);
         request.SetHeader("Accept", "application/json");
         request.AddField("email", EmailField.text);
         request.AddField("password", PasswordField.text);
@@ -119,7 +118,7 @@ public class LoginScript : MonoBehaviour
 
     public void authenticateUser(String token) {
         Debug.Log("Authenticating user...");
-        HTTPRequest request = new HTTPRequest(new Uri(baseUrl + "/api/user"), onAuthRequestFinished);
+        HTTPRequest request = new HTTPRequest(new Uri(State.Instance.baseUrl + "/api/user"), onAuthRequestFinished);
         request.SetHeader("Accept", "application/json");
         request.SetHeader("Authorization", "Bearer " + token);
         request.Send();
@@ -138,8 +137,7 @@ public class LoginScript : MonoBehaviour
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(StartGameButton.gameObject);
 
-        PusherManager.instance.token = user.token;
-        PusherManager.instance.baseUrl = baseUrl;
+        State.Instance.token = user.token;
         await PusherManager.instance.InitialisePusher();
 
     }

@@ -25,8 +25,7 @@ public class PusherManager : MonoBehaviour
     public string APP_CLUSTER = "ap4";
 
 
-  public string baseUrl = null;
-  public string token = null;
+
   public Text my_text;
 
 
@@ -48,18 +47,18 @@ public class PusherManager : MonoBehaviour
     {
         //Environment.SetEnvironmentVariable("PREFER_DNS_IN_ADVANCE", "true");
 
-        if (token == null || baseUrl == null)
+        if (State.Instance.token == null || State.Instance.baseUrl == null)
         {
-            Debug.Log("No token or baseUrl, not starting Pusher");
+            Debug.Log("No State.Instance.token or State.Instance.baseUrl, not starting Pusher");
             return;
         }
-        Debug.Log("Initialising pusher with token: " + token);
+        Debug.Log("Initialising pusher with token: " + State.Instance.token);
 
         _pusher = new Pusher(APP_KEY, new PusherOptions()
         {
             Cluster = APP_CLUSTER,
             Encrypted = true,
-            Authorizer = new MyAuthorizer(baseUrl + "/broadcasting/auth")
+            Authorizer = new MyAuthorizer(State.Instance.baseUrl + "/broadcasting/auth")
         });
 
         // _pusher.Error += OnPusherOnError;
@@ -69,9 +68,9 @@ public class PusherManager : MonoBehaviour
         
         // Create the room - Send http request to create our room and get the name of room back
         Debug.Log("Requesting create room...");
-        var request = new HTTPRequest(new Uri(baseUrl + "/api/new-room"));
+        var request = new HTTPRequest(new Uri(State.Instance.baseUrl + "/api/new-room"));
         request.SetHeader("Accept", "application/json");
-        request.SetHeader("Authorization", "Bearer " + token);
+        request.SetHeader("Authorization", "Bearer " + State.Instance.token);
         
         try {
         string result = await request.GetAsStringAsync();
@@ -274,8 +273,9 @@ public class MyAuthorizer : IAuthorizer
             string data = String.Format("channel_name={0}&socket_id={1}", channelName, socketId);
             webClient.Headers.Set("Content-Type", "application/x-www-form-urlencoded");
             webClient.Headers.Add("Accept", "application/json");
-            // webClient.Headers.Add("Authorization", "Bearer 1|AfT4WRoTqLfgaDZhX2pxb7wLI748AIHuCPCZuF2K"); // my computer
-            webClient.Headers.Add("Authorization", "Bearer 8|7k4AAxZuGlZbdRENbIHVC1R1lK4OIUqsfjyUM5Da"); // tvos
+            // webClient.Headers.Add("Authorization", "Bearer 8|7k4AAxZuGlZbdRENbIHVC1R1lK4OIUqsfjyUM5Da"); // tvos
+            Debug.Log("token" + State.Instance.token);
+            webClient.Headers.Add("Authorization", "Bearer " + State.Instance.token); // tvos
             authToken = webClient.UploadString(_authEndpoint, "POST", data);
         }
         return authToken;

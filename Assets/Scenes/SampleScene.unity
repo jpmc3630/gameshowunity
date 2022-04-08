@@ -727,9 +727,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1604910998}
-        m_TargetAssemblyTypeName: PusherManager, Assembly-CSharp
-        m_MethodName: MyTriggerEvent
+      - m_Target: {fileID: 1604910997}
+        m_TargetAssemblyTypeName: MenuScript, Assembly-CSharp
+        m_MethodName: StartGameButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3956,8 +3956,6 @@ MonoBehaviour:
   JoinCodeText: {fileID: 243336461}
   APP_KEY: 81019b1380702f6af7e4
   APP_CLUSTER: ap4
-  baseUrl: 
-  token: 
   my_text: {fileID: 227005746}
 --- !u!114 &1604910999
 MonoBehaviour:

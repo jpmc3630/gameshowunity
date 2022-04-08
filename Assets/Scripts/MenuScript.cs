@@ -76,4 +76,8 @@ public class MenuScript : MonoBehaviour
         }
     }
 
+    public void StartGameButtonClick() {
+        State.Instance.startGame();
+    }
+
 }

@@ -70,7 +70,7 @@ public sealed class State
         GameObject.Find("Canvas").GetComponent<MenuScript>().closeAllPanels();
 
         // fetch a question
-        Debug.Log("Requesting create room...");
+        Debug.Log("Fetching question...");
         var request = new HTTPRequest(new Uri(State.Instance.baseUrl + "/api/question"));
         request.SetHeader("Accept", "application/json");
         request.SetHeader("Authorization", "Bearer " + State.Instance.token);

@@ -64,6 +64,36 @@ public sealed class State
       GameObject.Find("Canvas").GetComponent<RenderScript>().redrawPlayerList();
     }
 
+    public async void startGame() {
+
+        // Hide the lobby
+        GameObject.Find("Canvas").GetComponent<MenuScript>().closeAllPanels();
+
+        // fetch a question
+        Debug.Log("Requesting create room...");
+        var request = new HTTPRequest(new Uri(State.Instance.baseUrl + "/api/question"));
+        request.SetHeader("Accept", "application/json");
+        request.SetHeader("Authorization", "Bearer " + State.Instance.token);
+        
+        try {
+            string result = await request.GetAsStringAsync();
+            Debug.Log("Question: " + result);
+            // Room = result;
+
+        } catch(Exception ex)
+        {
+            Debug.Log("Create room request failed:");
+            Debug.LogException(ex);
+        }
+        // Show the QUESTION screen
+
+        // Listen for answers
+
+        // Start the timer on first answer recieved
+
+        // When timer expires OR everyone has answered, show the ANSWER and RESULTS screen
+
+    }
 }
 
 

@@ -11,6 +11,7 @@ public class MenuScript : MonoBehaviour
     public GameObject StartButton;
     public GameObject LobbyPanel;
     public GameObject SettingsPanel;
+    public GameObject LoadingPanel;
     public GameObject MenuPanel;
     // public GameObject LogoutButton;
     public GameObject StartGameButton;
@@ -29,6 +30,7 @@ public class MenuScript : MonoBehaviour
         LoginPanel.SetActive(false);
         LobbyPanel.SetActive(false);
         SettingsPanel.SetActive(false);
+        LoadingPanel.SetActive(true);
     }
 
     public void MenuButtonClick() {

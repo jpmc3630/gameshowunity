@@ -75,17 +75,18 @@ public sealed class State
         request.SetHeader("Accept", "application/json");
         request.SetHeader("Authorization", "Bearer " + State.Instance.token);
         
+        Question question = new Question();
+        // Show the QUESTION
         try {
-            string result = await request.GetAsStringAsync();
-            Debug.Log("Question: " + result);
-            // Room = result;
-
+            question = await request.GetFromJsonResultAsync<Question>();
+            Debug.Log("Question: " + question.question);
         } catch(Exception ex)
         {
-            Debug.Log("Create room request failed:");
+            Debug.Log("Question Fetch Failed:");
             Debug.LogException(ex);
         }
-        // Show the QUESTION screen
+        GameObject.Find("Canvas").GetComponent<RenderScript>().drawQuestion(question);
+
 
         // Listen for answers
 
@@ -94,6 +95,7 @@ public sealed class State
         // When timer expires OR everyone has answered, show the ANSWER and RESULTS screen
 
     }
+
 }
 
 
@@ -103,4 +105,15 @@ public class Player
     public string Name { get; set; }
     public string Id { get; set; }
     public int Score { get; set; }
+}
+
+
+public class Question
+{
+    public int id { get; set; }
+    public string question { get; set; }
+    public string answer { get; set; }
+    public string first_incorrect { get; set; }
+    public string second_incorrect { get; set; }
+    public string category { get; set; }
 }

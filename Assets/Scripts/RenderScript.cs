@@ -5,12 +5,18 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 using UnityEngine.UI;
+using TMPro;
 
 public class RenderScript : MonoBehaviour
 {
     
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playersList;
+
+    public TextMeshProUGUI QuestionText;
+    public TextMeshProUGUI A_AnswerText;
+    public TextMeshProUGUI B_AnswerText;
+    public TextMeshProUGUI C_AnswerText;
     void Start()
     {
 
@@ -38,6 +44,14 @@ public class RenderScript : MonoBehaviour
                 texts[0].text = State.Instance.playerList[i].Name;
             }
         }
+    }
+
+    public void drawQuestion(Question question) {
+        QuestionText.text = question.question;
+        A_AnswerText.text = question.answer;
+        B_AnswerText.text = question.first_incorrect;
+        C_AnswerText.text = question.second_incorrect;
+        GameObject.Find("Canvas").GetComponent<MenuScript>().showQuestionPanel();
     }
 
 

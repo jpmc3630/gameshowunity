@@ -12,6 +12,7 @@ public class MenuScript : MonoBehaviour
     public GameObject LobbyPanel;
     public GameObject SettingsPanel;
     public GameObject LoadingPanel;
+    public GameObject QuestionPanel;
     public GameObject MenuPanel;
     // public GameObject LogoutButton;
     public GameObject StartGameButton;
@@ -76,6 +77,11 @@ public class MenuScript : MonoBehaviour
             m_EventSystem.SetSelectedGameObject(null);
             m_EventSystem.SetSelectedGameObject(EmailField.gameObject);
         }
+    }
+
+    public void showQuestionPanel() {
+        LoadingPanel.SetActive(false);
+        QuestionPanel.SetActive(true);
     }
 
     public void StartGameButtonClick() {

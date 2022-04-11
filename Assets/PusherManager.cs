@@ -132,29 +132,50 @@ public class PusherManager : MonoBehaviour
         TheDispatcher.RunOnMainThread(() => State.Instance.removePlayerById(player.Value.Id));
     }
 
+    public static void DumpToConsole(object obj)
+    {
+        var output = JsonUtility.ToJson(obj, true);
+        Debug.Log(output);
+    }
+
     private void PusherOnConnected(object sender)
     {
         Debug.Log("Connected");
+        _channel.Bind("client-answer", (String data) =>
+        {
+           
+          Debug.Log("-----------------------------Player Answer Recieved -----------------------------");
+            try
+            {
+                var theData = data.ToString()
+                    .Replace("\\\"", "\"")
+                    .Replace("\"{", "{")
+                    .Replace("}\"", "}");
+                    Debug.Log(theData);
+                var received = JsonConvert.DeserializeObject<AnswerEvent>(theData);
+                // AnswerEvent answerEvent = JsonUtility.FromJson<AnswerEvent>(data);
+                if (received != null)
+                {   
+                    Debug.Log("-----------------------------Received: -----------------------------");
+                    // if state is waiting for answer, then set the answer for that player
+                    if (State.Instance.currentScreen == "question")
+                    {
+                        
+                    }
+                    TheDispatcher.RunOnMainThread(() => State.Instance.setPlayerAnswer(received.user_id, received.data.answer));
+                }
+            }
+            catch(Exception ex)
+            { 
+              Debug.Log(ex);
+            }
 
-            // _channel.Bind("pusher:member_added", (String member) => {
-            //   // For example
-            //   // add_member(member.id, member.info);
-            //   Debug.Log("Member Joined:");
-            //   // Debug.Log("Member ID: " + member.id);
-            //   // Debug.Log("Member Info: " +  member.info);
-            // });
-
-            // _channel.Bind("pusher:member_removed", (String member) => {
-            //   // For example
-            //   Debug.Log("Member Left:");
-            //   // Debug.Log("Member ID: " + member.id);
-            //   // Debug.Log("Member Info: " +  member.info);
-            // });
+        });
 
         _channel.Bind("client-my-event", (String data) =>
         {
 
-          Debug.Log("--------------------------------------------------------------------Client Message Recieved ---------------------------------------------------------");
+          Debug.Log("-----------------------------Client Message Recieved -----------------------------");
           Debug.Log(data);
             // try
             // {
@@ -183,7 +204,7 @@ public class PusherManager : MonoBehaviour
                     // TheDispatcher.RunOnMainThread(() => AddPlayer(received.Data.Message, received.Data.Name));
                 // MessageText.text = "my-event received";
             // Debug.Log("my-event received");
-            Debug.Log("------------------------------------------------------------------Server Message Recieved ---------------------------------------------------------");
+            Debug.Log("----------------------------- Server Message Recieved -----------------------------");
         });
     }
 
@@ -197,7 +218,14 @@ public class PusherManager : MonoBehaviour
             UserId = "DrTvOS"
         };
         _channel.Trigger("client-my-event", messageToSend);
-        Debug.Log("---------------------------------------------------------------------Triggering client event ---------------------------------------------------");
+        Debug.Log("----------------------------- Triggering client event -----------------------------");
+    }
+
+
+    public void PlayerMode(string mode)
+    {
+        _channel.Trigger("client-mode", mode);
+        Debug.Log("----------------------------- Player Mode: " + mode + " -----------------------------");
     }
 
 // private static void PushData(PusherAction action, string eventName, dynamic data)
@@ -231,7 +259,7 @@ public class PusherManager : MonoBehaviour
 
     private void OnChannelOnSubscribed(object s, Channel channel)
     {
-        Debug.Log("----------------------------------------------------------------------Subscribed---------------------------------------------------------------");
+        Debug.Log("----------------------------- Subscribed -----------------------------");
     }
 
     public async Task OnApplicationQuit()
@@ -307,3 +335,23 @@ public class MessageToSend
     public String SocketId;
     public String UserId;
 }
+
+[Serializable]
+public class ModeChange
+{
+    public int Mode;
+}
+
+[Serializable]
+public class AnswerEvent
+{
+    public AnswerData data;
+
+    public string user_id;
+}
+[Serializable]
+public class AnswerData
+{
+    public string answer;
+}
+

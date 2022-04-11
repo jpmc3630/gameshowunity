@@ -70,14 +70,12 @@ public sealed class State
         GameObject.Find("Canvas").GetComponent<MenuScript>().closeAllPanels();
 
         // fetch a question
-        Debug.Log("Fetching question...");
-        var request = new HTTPRequest(new Uri(State.Instance.baseUrl + "/api/question"));
-        request.SetHeader("Accept", "application/json");
-        request.SetHeader("Authorization", "Bearer " + State.Instance.token);
-        
         Question question = new Question();
-        // Show the QUESTION
+        Debug.Log("Fetching question...");
         try {
+            var request = new HTTPRequest(new Uri(State.Instance.baseUrl + "/api/question"));
+            request.SetHeader("Accept", "application/json");
+            request.SetHeader("Authorization", "Bearer " + State.Instance.token);
             question = await request.GetFromJsonResultAsync<Question>();
             Debug.Log("Question: " + question.question);
         } catch(Exception ex)
@@ -85,15 +83,50 @@ public sealed class State
             Debug.Log("Question Fetch Failed:");
             Debug.LogException(ex);
         }
+        // Show the QUESTION
         GameObject.Find("Canvas").GetComponent<RenderScript>().drawQuestion(question);
 
+        // set all players answers to null
+        for (int i=0; i< instance.playerList.Count; i++) {
+          instance.playerList[i].Answer = null;
+        }
+        
+        // Tell players to show question screen
+        PusherManager.instance.PlayerMode("1");
 
         // Listen for answers
-
+        
         // Start the timer on first answer recieved
 
-        // When timer expires OR everyone has answered, show the ANSWER and RESULTS screen
 
+
+        // TODO: Randomize the answers
+
+    }
+
+    public void showAnswers() {
+      // When timer expires OR everyone has answered, show the ANSWER and RESULTS screen
+        // Tell players to show answer screen
+        PusherManager.instance.PlayerMode("0");
+        Debug.Log("Show Answers");
+        instance.currentScreen = "answer";
+
+
+    }
+    public void setPlayerAnswer(String user_id, String answer) {
+      // if timer isn't running, start it
+      if (!GameObject.Find("Canvas").GetComponent<CountdownScript>().isCountingDown) {
+          GameObject.Find("Canvas").GetComponent<CountdownScript>().Begin();
+      }
+
+      // set the player's answer
+      for (int i=0; i< instance.playerList.Count; i++) {
+        if (instance.playerList[i].Id == user_id && instance.playerList[i].Answer == null) {
+          instance.playerList[i].Answer = answer;
+          Debug.Log("Player " + instance.playerList[i].Name + " answered: " + instance.playerList[i].Answer);
+          break;
+        }
+      }
     }
 
 }
@@ -105,6 +138,7 @@ public class Player
     public string Name { get; set; }
     public string Id { get; set; }
     public int Score { get; set; }
+    public string Answer { get; set; }
 }
 
 

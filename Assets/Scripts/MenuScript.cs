@@ -80,6 +80,7 @@ public class MenuScript : MonoBehaviour
     }
 
     public void showQuestionPanel() {
+        State.Instance.currentScreen = "question";
         LoadingPanel.SetActive(false);
         QuestionPanel.SetActive(true);
     }

@@ -15,6 +15,7 @@ using UnityEngine.EventSystems;
 public sealed class State
 {
     // public bool testVar { get; set; }
+    public CountdownScript countdownScript = GameObject.Find("Canvas").GetComponent<CountdownScript>();
     public GameObject Canvas;
     public string currentScreen;
 
@@ -39,7 +40,6 @@ public sealed class State
                     if(instance == null)
                     {
                         instance = new State();
-                        
                     }
                 }
             }
@@ -111,14 +111,14 @@ public sealed class State
         PusherManager.instance.PlayerMode("0");
         Debug.Log("Show Answers");
         instance.currentScreen = "answer";
-        GameObject.Find("Canvas").GetComponent<CountdownScript>().Begin(10, State.Instance.startGame);
+        countdownScript.Begin(10, State.Instance.startGame);
     }
 
     public void setPlayerAnswer(String user_id, String answer) {
       // if timer isn't running, start it
       Debug.Log("Set player answer func running");
-      if (!GameObject.Find("Canvas").GetComponent<CountdownScript>().isCountingDown) {
-          GameObject.Find("Canvas").GetComponent<CountdownScript>().Begin(5, State.Instance.showAnswers);
+      if (!countdownScript.isCountingDown) {
+          countdownScript.Begin(5, State.Instance.showAnswers);
       }
 
       // set the player's answer

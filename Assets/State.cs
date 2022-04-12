@@ -18,7 +18,7 @@ public sealed class State
     public GameObject Canvas;
     public string currentScreen;
 
-    public string baseUrl = "https://fdac-61-245-129-196.au.ngrok.io";
+    public string baseUrl = "https://3e1c-61-245-129-196.au.ngrok.io";
     public string token = null;
 
     public List<Player> playerList = new List<Player> ();
@@ -105,18 +105,20 @@ public sealed class State
     }
 
     public void showAnswers() {
-      // When timer expires OR everyone has answered, show the ANSWER and RESULTS screen
+        // When timer expires OR everyone has answered, show the ANSWER and RESULTS screen
+
         // Tell players to show answer screen
         PusherManager.instance.PlayerMode("0");
         Debug.Log("Show Answers");
         instance.currentScreen = "answer";
-
-
+        GameObject.Find("Canvas").GetComponent<CountdownScript>().Begin(10, State.Instance.startGame);
     }
+
     public void setPlayerAnswer(String user_id, String answer) {
       // if timer isn't running, start it
+      Debug.Log("Set player answer func running");
       if (!GameObject.Find("Canvas").GetComponent<CountdownScript>().isCountingDown) {
-          GameObject.Find("Canvas").GetComponent<CountdownScript>().Begin();
+          GameObject.Find("Canvas").GetComponent<CountdownScript>().Begin(5, State.Instance.showAnswers);
       }
 
       // set the player's answer

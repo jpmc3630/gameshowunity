@@ -7,22 +7,14 @@ using TMPro;
 
  public class CountdownScript : MonoBehaviour {
     public TextMeshProUGUI CountdownText;
-     public int duration = 5;
-    //  public string purpose = "question";
-    //  private void countdownCallback;
-
     public delegate void countdownDelegate(); // This defines what type of method you're going to call.
     public countdownDelegate m_methodToCall; // This is the variable holding the method you're going to call.
-
     public int timeRemaining;
     public bool isCountingDown = false;
-    //  public void Begin(int duration, string purpose)
-    public void Begin(int duration, countdownDelegate myCallback)
+    public void Begin(int duration, countdownDelegate onExpiryCallback)
      {
         if (!isCountingDown) {
-            this.m_methodToCall = myCallback;
-            this.duration = duration;
-            // this.purpose = purpose;
+            this.m_methodToCall = onExpiryCallback; // Like a little constructor for our callback delegate
             timeRemaining = duration;
             Debug.Log("Start timer");
             isCountingDown = true;
@@ -42,14 +34,6 @@ using TMPro;
             CountdownText.text = "";
             isCountingDown = false;
             this.m_methodToCall();
-            // if (this.purpose == "question") {
-            //     Debug.Log("Question time is up");
-            //     State.Instance.showAnswers();
-            // } else if (this.purpose == "answer") {
-            //     Debug.Log("Answer time is up");
-            //     State.Instance.startGame();
-            // }
-            
         }
     }
  }

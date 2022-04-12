@@ -222,9 +222,14 @@ public class PusherManager : MonoBehaviour
     }
 
 
-    public void PlayerMode(string mode)
+    public void PlayerMode(string mode, string message)
     {
-        _channel.Trigger("client-mode", mode);
+        _channel.Trigger("client-mode", new ModeChange
+          {
+            Mode = mode,
+            Message = message
+          }
+        );
         Debug.Log("----------------------------- Player Mode: " + mode + " -----------------------------");
     }
 
@@ -339,7 +344,8 @@ public class MessageToSend
 [Serializable]
 public class ModeChange
 {
-    public int Mode;
+    public string Mode;
+    public string Message;
 }
 
 [Serializable]

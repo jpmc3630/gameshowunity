@@ -8,22 +8,23 @@ using BestHTTP;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+// using System.Random;
 
 // using Newtonsoft.Json;
 // using static RenderScript;
 
 public sealed class State
 {
-    // public bool testVar { get; set; }
+    public string baseUrl = "https://3e1c-61-245-129-196.au.ngrok.io";
+    public string token = null;
     public CountdownScript countdownScript = GameObject.Find("Canvas").GetComponent<CountdownScript>();
     public RenderScript renderScript = GameObject.Find("Canvas").GetComponent<RenderScript>();
     public MenuScript menuScript = GameObject.Find("Canvas").GetComponent<MenuScript>();
     public GameObject Canvas;
+    public Question question;
     public string currentScreen;
 
-    public string baseUrl = "https://3e1c-61-245-129-196.au.ngrok.io";
-    public string token = null;
-
+    // public int playersAnswered = 0;
     public List<Player> playerList = new List<Player> ();
     private static object _lockObj = new object();
     private static State instance;
@@ -72,7 +73,7 @@ public sealed class State
         menuScript.closeAllPanels();
 
         // fetch a question
-        Question question = new Question();
+        question = new Question();
         Debug.Log("Fetching question...");
         try {
             var request = new HTTPRequest(new Uri(State.Instance.baseUrl + "/api/question"));
@@ -85,6 +86,21 @@ public sealed class State
             Debug.Log("Question Fetch Failed:");
             Debug.LogException(ex);
         }
+        
+        // shuffle the question
+        string[] myArray = {
+            question.answer,
+            question.first_incorrect,
+            question.second_incorrect
+        };
+        System.Random rnd=new System.Random();
+        rnd.Shuffle(myArray);
+        question.shuffled = myArray;
+        
+        // find the position of correct answer
+        string[] positions = {"A", "B", "C"};
+        question.answerPosition = positions[Array.FindIndex(myArray, x => x.Contains(question.answer))];
+
         // Show the QUESTION
         renderScript.drawQuestion(question);
 
@@ -94,33 +110,29 @@ public sealed class State
         }
         
         // Tell players to show question screen
-        PusherManager.instance.PlayerMode("1");
+        PusherManager.instance.PlayerMode("buttons", "");
 
         // Listen for answers
-        
-        // Start the timer on first answer recieved
-
-
-
-        // TODO: Randomize the answers
-
+        // this is handled in pusher manager bind event ...
+        // if flag currentScreen == "question" then call setPlayerAnswer with player id and answer
     }
 
     public void showAnswers() {
         // When timer expires OR everyone has answered, show the ANSWER and RESULTS screen
 
         // Tell players to show answer screen
-        PusherManager.instance.PlayerMode("0");
+        PusherManager.instance.PlayerMode("answer", question.answerPosition);
         Debug.Log("Show Answers");
+
         instance.currentScreen = "answer";
+
         countdownScript.Begin(10, State.Instance.startGame);
     }
 
     public void setPlayerAnswer(String user_id, String answer) {
       // if timer isn't running, start it
-      Debug.Log("Set player answer func running");
       if (!countdownScript.isCountingDown) {
-          countdownScript.Begin(5, State.Instance.showAnswers);
+          countdownScript.Begin(5, State.Instance.showAnswers); // TODO: move these constants into a settings folder
       }
 
       // set the player's answer
@@ -130,6 +142,13 @@ public sealed class State
           Debug.Log("Player " + instance.playerList[i].Name + " answered: " + instance.playerList[i].Answer);
           break;
         }
+      }
+      
+      question.playersAnswered++;
+      if (question.playersAnswered >= instance.playerList.Count) {
+        // everyone has answered
+        Debug.Log("Everyone has answered");
+        countdownScript.SkipToTheEnd();
       }
     }
 
@@ -154,4 +173,22 @@ public class Question
     public string first_incorrect { get; set; }
     public string second_incorrect { get; set; }
     public string category { get; set; }
+    public string[] shuffled {get; set;}
+    public string answerPosition { get; set; }
+    public int playersAnswered = 0;
+}
+
+static class RandomExtensions
+{
+    public static void Shuffle<T> (this System.Random rng, T[] array)
+    {
+        int n = array.Length;
+        while (n > 1) 
+        {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
 }

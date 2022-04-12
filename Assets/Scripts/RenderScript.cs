@@ -48,9 +48,9 @@ public class RenderScript : MonoBehaviour
 
     public void drawQuestion(Question question) {
         QuestionText.text = question.question;
-        A_AnswerText.text = question.answer;
-        B_AnswerText.text = question.first_incorrect;
-        C_AnswerText.text = question.second_incorrect;
+        A_AnswerText.text = question.shuffled[0];
+        B_AnswerText.text = question.shuffled[1];
+        C_AnswerText.text = question.shuffled[2];
         State.Instance.menuScript.showQuestionPanel();
     }
 

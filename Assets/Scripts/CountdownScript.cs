@@ -23,6 +23,14 @@ using TMPro;
             Invoke ( "_tick", 1f );
         }
     }
+
+    public void SkipToTheEnd()
+     {
+        CancelInvoke ( "_tick" );
+        CountdownText.text = "";
+        isCountingDown = false;
+        this.m_methodToCall();
+    }
  
     private void _tick() {
         timeRemaining--;

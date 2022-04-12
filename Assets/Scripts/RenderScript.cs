@@ -51,7 +51,7 @@ public class RenderScript : MonoBehaviour
         A_AnswerText.text = question.answer;
         B_AnswerText.text = question.first_incorrect;
         C_AnswerText.text = question.second_incorrect;
-        GameObject.Find("Canvas").GetComponent<MenuScript>().showQuestionPanel();
+        State.Instance.menuScript.showQuestionPanel();
     }
 
 

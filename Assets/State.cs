@@ -16,6 +16,8 @@ public sealed class State
 {
     // public bool testVar { get; set; }
     public CountdownScript countdownScript = GameObject.Find("Canvas").GetComponent<CountdownScript>();
+    public RenderScript renderScript = GameObject.Find("Canvas").GetComponent<RenderScript>();
+    public MenuScript menuScript = GameObject.Find("Canvas").GetComponent<MenuScript>();
     public GameObject Canvas;
     public string currentScreen;
 
@@ -51,7 +53,7 @@ public sealed class State
     public void addPlayerToPlayerList(Player newPlayer) {
       Debug.Log("New Player Joined: " + newPlayer.Name);
       instance.playerList.Add(newPlayer);
-      GameObject.Find("Canvas").GetComponent<RenderScript>().redrawPlayerList();
+      renderScript.redrawPlayerList();
     }
 
     public void removePlayerById(String id) {
@@ -61,13 +63,13 @@ public sealed class State
           break;
         }
       }
-      GameObject.Find("Canvas").GetComponent<RenderScript>().redrawPlayerList();
+      renderScript.redrawPlayerList();
     }
 
     public async void startGame() {
 
         // Hide the lobby
-        GameObject.Find("Canvas").GetComponent<MenuScript>().closeAllPanels();
+        menuScript.closeAllPanels();
 
         // fetch a question
         Question question = new Question();
@@ -84,7 +86,7 @@ public sealed class State
             Debug.LogException(ex);
         }
         // Show the QUESTION
-        GameObject.Find("Canvas").GetComponent<RenderScript>().drawQuestion(question);
+        renderScript.drawQuestion(question);
 
         // set all players answers to null
         for (int i=0; i< instance.playerList.Count; i++) {

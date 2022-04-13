@@ -12,7 +12,6 @@ public class RenderScript : MonoBehaviour
     
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playersList;
-    public CountdownScript countdownScript;
     public TextMeshProUGUI QuestionText;
     public TextMeshProUGUI A_AnswerText;
     public TextMeshProUGUI B_AnswerText;
@@ -20,10 +19,7 @@ public class RenderScript : MonoBehaviour
     public TextMeshProUGUI A_TitleText;
     public TextMeshProUGUI B_TitleText;
     public TextMeshProUGUI C_TitleText;
-    void Start()
-    {
-        countdownScript = GameObject.Find("Canvas").GetComponent<CountdownScript>();
-    }
+    
 
     public void redrawPlayerList() {
         // clear the list

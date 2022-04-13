@@ -17,7 +17,6 @@ public sealed class State
 {
     public string baseUrl = "https://da34-61-245-129-196.au.ngrok.io";
     public string token = null;
-    public CountdownScript countdownScript = GameObject.Find("Canvas").GetComponent<CountdownScript>();
     public RenderScript renderScript = GameObject.Find("Canvas").GetComponent<RenderScript>();
     public MenuScript menuScript = GameObject.Find("Canvas").GetComponent<MenuScript>();
     public GameObject Canvas;
@@ -134,13 +133,13 @@ public sealed class State
         // sound fx manager
         // settings screen
 
-        countdownScript.Begin(10, true, State.Instance.startGame);
+        FunctionTimer.Create(() => State.Instance.startGame(), 10f, "", true);
     }
 
     public void setPlayerAnswer(String user_id, String answer) {
       // if timer isn't running, start it
-      if (!countdownScript.isCountingDown) {
-          countdownScript.Begin(5, true, State.Instance.showAnswers); // TODO: move these constants into a settings folder
+      if (question.playersAnswered == 0) {
+          FunctionTimer.Create(() => State.Instance.showAnswers(), 5f, "Timeout", true);
       }
 
       // set the player's answer
@@ -156,7 +155,8 @@ public sealed class State
       if (question.playersAnswered >= instance.playerList.Count) {
         // everyone has answered
         Debug.Log("Everyone has answered");
-        countdownScript.SkipToTheEnd();
+        FunctionTimer.StopAllTimersWithName("Timeout");
+        State.Instance.showAnswers();
       }
     }
 

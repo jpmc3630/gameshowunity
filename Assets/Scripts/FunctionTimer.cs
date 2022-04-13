@@ -13,6 +13,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 
 /*
   * Triggers a Action after a certain time 
@@ -47,18 +48,20 @@ public class FunctionTimer {
 
 
     public static FunctionTimer Create(Action action, float timer) {
-        return Create(action, timer, "", false, false);
+        return Create(action, timer, "", false, false, false);
     }
 
     public static FunctionTimer Create(Action action, float timer, string functionName) {
-        return Create(action, timer, functionName, false, false);
+        return Create(action, timer, functionName, false, false, false);
+    }
+    public static FunctionTimer Create(Action action, float timer, string functionName, bool display) {
+        return Create(action, timer, functionName, display, false, false);
+    }
+    public static FunctionTimer Create(Action action, float timer, string functionName, bool display, bool useUnscaledDeltaTime) {
+        return Create(action, timer, functionName, display, useUnscaledDeltaTime, false);
     }
 
-    public static FunctionTimer Create(Action action, float timer, string functionName, bool useUnscaledDeltaTime) {
-        return Create(action, timer, functionName, useUnscaledDeltaTime, false);
-    }
-
-    public static FunctionTimer Create(Action action, float timer, string functionName, bool useUnscaledDeltaTime, bool stopAllWithSameName) {
+    public static FunctionTimer Create(Action action, float timer, string functionName, bool display, bool useUnscaledDeltaTime, bool stopAllWithSameName) {
         InitIfNeeded();
 
         if (stopAllWithSameName) {
@@ -66,7 +69,7 @@ public class FunctionTimer {
         }
 
         GameObject obj = new GameObject("FunctionTimer Object "+functionName, typeof(MonoBehaviourHook));
-        FunctionTimer funcTimer = new FunctionTimer(obj, action, timer, functionName, useUnscaledDeltaTime);
+        FunctionTimer funcTimer = new FunctionTimer(obj, action, timer, functionName, display, useUnscaledDeltaTime);
         obj.GetComponent<MonoBehaviourHook>().OnUpdate = funcTimer.Update;
 
         timerList.Add(funcTimer);
@@ -107,17 +110,23 @@ public class FunctionTimer {
     private float timer;
     private string functionName;
     private bool active;
+    private bool display;
     private bool useUnscaledDeltaTime;
     private Action action;
 
+    public TextMeshProUGUI CountdownText;
 
-
-    public FunctionTimer(GameObject gameObject, Action action, float timer, string functionName, bool useUnscaledDeltaTime) {
+    public FunctionTimer(GameObject gameObject, Action action, float timer, string functionName, bool display, bool useUnscaledDeltaTime) {
         this.gameObject = gameObject;
         this.action = action;
         this.timer = timer;
         this.functionName = functionName;
         this.useUnscaledDeltaTime = useUnscaledDeltaTime;
+        this.display = display;
+        if (display) {
+            this.CountdownText = GameObject.Find("CountdownText").GetComponent<TextMeshProUGUI>();
+            this.CountdownText.enabled = true;
+        }
     }
 
     private void Update() {
@@ -126,8 +135,10 @@ public class FunctionTimer {
         } else {
             timer -= Time.deltaTime;
         }
+        if (display) CountdownText.text = Math.Ceiling(timer).ToString();
         if (timer <= 0) {
             // Timer complete, trigger Action
+            if (display) CountdownText.enabled = false;
             action();
             DestroySelf();
         }

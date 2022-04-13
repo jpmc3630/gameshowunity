@@ -15,7 +15,7 @@ using UnityEngine.EventSystems;
 
 public sealed class State
 {
-    public string baseUrl = "https://3e1c-61-245-129-196.au.ngrok.io";
+    public string baseUrl = "https://da34-61-245-129-196.au.ngrok.io";
     public string token = null;
     public CountdownScript countdownScript = GameObject.Find("Canvas").GetComponent<CountdownScript>();
     public RenderScript renderScript = GameObject.Find("Canvas").GetComponent<RenderScript>();
@@ -126,13 +126,21 @@ public sealed class State
 
         instance.currentScreen = "answer";
 
-        countdownScript.Begin(10, State.Instance.startGame);
+        // TODO: Show the answer screen here + show who got it right and wrong
+        // OTHER TODO:
+        // keep scores, show results, etc.
+        // enter player name
+        // choose player avatar
+        // sound fx manager
+        // settings screen
+
+        countdownScript.Begin(10, true, State.Instance.startGame);
     }
 
     public void setPlayerAnswer(String user_id, String answer) {
       // if timer isn't running, start it
       if (!countdownScript.isCountingDown) {
-          countdownScript.Begin(5, State.Instance.showAnswers); // TODO: move these constants into a settings folder
+          countdownScript.Begin(5, true, State.Instance.showAnswers); // TODO: move these constants into a settings folder
       }
 
       // set the player's answer

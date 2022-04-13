@@ -50,7 +50,10 @@ public class RenderScript : MonoBehaviour
         A_AnswerText.enabled = A_TitleText.enabled = false;
         B_AnswerText.enabled = B_TitleText.enabled = false;
         C_AnswerText.enabled = C_TitleText.enabled = false;
-        
+        A_AnswerText.color = A_TitleText.color = new Color32(255, 255, 255, 255);
+        B_AnswerText.color = B_TitleText.color = new Color32(255, 255, 255, 255);
+        C_AnswerText.color = C_TitleText.color = new Color32(255, 255, 255, 255);
+
         State.Instance.menuScript.showQuestionPanel();
         QuestionText.text = question.question;
         A_AnswerText.text = question.shuffled[0];

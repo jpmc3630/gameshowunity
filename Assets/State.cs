@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 // using System.Random;
-
+using TMPro;
 // using Newtonsoft.Json;
 // using static RenderScript;
 
@@ -124,6 +124,17 @@ public sealed class State
         Debug.Log("Show Answers");
 
         instance.currentScreen = "answer";
+
+        TextMeshProUGUI A_Title = GameObject.Find("A_TitleText").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI B_Title = GameObject.Find("B_TitleText").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI C_Title = GameObject.Find("C_TitleText").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI A_Text = GameObject.Find("A_AnswerText").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI B_Text = GameObject.Find("B_AnswerText").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI C_Text = GameObject.Find("C_AnswerText").GetComponent<TextMeshProUGUI>();
+
+        A_Text.color = A_Title.color = question.answerPosition == "A" ? new Color32(0, 255, 0, 255) : new Color32(255, 0, 0, 255);
+        B_Text.color = B_Title.color = question.answerPosition == "B" ? new Color32(0, 255, 0, 255) : new Color32(255, 0, 0, 255);
+        C_Text.color = C_Title.color = question.answerPosition == "C" ? new Color32(0, 255, 0, 255) : new Color32(255, 0, 0, 255);
 
         // TODO: Show the answer screen here + show who got it right and wrong
         // OTHER TODO:

@@ -4805,7 +4805,6 @@ GameObject:
   - component: {fileID: 1604910998}
   - component: {fileID: 1604910999}
   - component: {fileID: 1604911001}
-  - component: {fileID: 1604911002}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -5041,21 +5040,9 @@ MonoBehaviour:
   A_AnswerText: {fileID: 1516269995}
   B_AnswerText: {fileID: 1773565055}
   C_AnswerText: {fileID: 533742923}
---- !u!114 &1604911002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1604910991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1af09cb4499040c4910f19c21240cc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CountdownText: {fileID: 1974281331}
-  timeRemaining: 0
-  isCountingDown: 0
+  A_TitleText: {fileID: 579647266}
+  B_TitleText: {fileID: 239048494}
+  C_TitleText: {fileID: 121948112}
 --- !u!1 &1610623716
 GameObject:
   m_ObjectHideFlags: 0

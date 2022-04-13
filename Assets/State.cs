@@ -110,7 +110,7 @@ public sealed class State
         }
         
         // Tell players to show question screen
-        PusherManager.instance.PlayerMode("buttons", "");
+        FunctionTimer.Create(() => PusherManager.instance.PlayerMode("buttons", ""), 6f);
 
         // Listen for answers
         // this is handled in pusher manager bind event ...

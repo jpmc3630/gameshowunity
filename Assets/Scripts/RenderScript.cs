@@ -51,40 +51,19 @@ public class RenderScript : MonoBehaviour
 
     public void drawQuestion(Question question) {
         QuestionText.enabled = false;
-        A_AnswerText.enabled = false;
-        B_AnswerText.enabled = false;
-        C_AnswerText.enabled = false;
-        A_TitleText.enabled = false;
-        B_TitleText.enabled = false;
-        C_TitleText.enabled = false;
+        A_AnswerText.enabled = A_TitleText.enabled = false;
+        B_AnswerText.enabled = B_TitleText.enabled = false;
+        C_AnswerText.enabled = C_TitleText.enabled = false;
+        
         State.Instance.menuScript.showQuestionPanel();
         QuestionText.text = question.question;
         A_AnswerText.text = question.shuffled[0];
         B_AnswerText.text = question.shuffled[1];
         C_AnswerText.text = question.shuffled[2];
-        countdownScript.Begin(1, false, RenderQuestion);
+        
+        FunctionTimer.Create(() => QuestionText.enabled = true, 1f);
+        FunctionTimer.Create(() => A_AnswerText.enabled = A_TitleText.enabled = true, 4f);
+        FunctionTimer.Create(() => B_AnswerText.enabled = B_TitleText.enabled = true, 5f);
+        FunctionTimer.Create(() => C_AnswerText.enabled = C_TitleText.enabled = true, 6f);
     }
-
-    // daisy chaining these timed calls is pretty wild, but damn it works good!
-    // Alternative is something thread blocking like ... System.Threading.Thread.Sleep(50);
-    public void RenderQuestion() {
-        QuestionText.enabled = true; 
-        countdownScript.Begin(3, false, RenderA);
-    }
-    public void RenderA() {
-        A_AnswerText.enabled = true;
-        A_TitleText.enabled = true;
-        countdownScript.Begin(1, false, RenderB);
-    }
-    public void RenderB() {
-        B_AnswerText.enabled = true;
-        B_TitleText.enabled = true;
-        countdownScript.Begin(1, false, RenderC);
-    }
-    public void RenderC() {
-        C_TitleText.enabled = true;
-        C_AnswerText.enabled = true;
-    }
-
-
 }

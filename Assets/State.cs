@@ -15,7 +15,7 @@ using TMPro;
 
 public sealed class State
 {
-    public string baseUrl = "https://da34-61-245-129-196.au.ngrok.io";
+    public string baseUrl = "https://4ad3-61-245-129-196.au.ngrok.io";
     public string token = null;
     public RenderScript renderScript = GameObject.Find("Canvas").GetComponent<RenderScript>();
     public MenuScript menuScript = GameObject.Find("Canvas").GetComponent<MenuScript>();
@@ -70,6 +70,9 @@ public sealed class State
 
         // Hide the lobby
         menuScript.closeAllPanels();
+
+        // play the music
+        SoundManager.Instance.PlayMusic(SoundManager.Instance.MusicSource.clip);
 
         // fetch a question
         question = new Question();

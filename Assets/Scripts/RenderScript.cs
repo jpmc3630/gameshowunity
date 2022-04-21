@@ -60,9 +60,21 @@ public class RenderScript : MonoBehaviour
         B_AnswerText.text = question.shuffled[1];
         C_AnswerText.text = question.shuffled[2];
         
-        FunctionTimer.Create(() => QuestionText.enabled = true, 1f);
-        FunctionTimer.Create(() => A_AnswerText.enabled = A_TitleText.enabled = true, 4f);
-        FunctionTimer.Create(() => B_AnswerText.enabled = B_TitleText.enabled = true, 5f);
-        FunctionTimer.Create(() => C_AnswerText.enabled = C_TitleText.enabled = true, 6f);
+        FunctionTimer.Create(() => {
+            SoundManager.Instance.Play(SoundManager.Instance.EffectsSource.clip); 
+            QuestionText.enabled = true;
+        }, 1f);
+        FunctionTimer.Create(() => {
+          A_AnswerText.enabled = A_TitleText.enabled = true;
+          SoundManager.Instance.Play(SoundManager.Instance.Swoosh1.clip);
+         }, 4f);
+        FunctionTimer.Create(() => {
+          B_AnswerText.enabled = B_TitleText.enabled = true;
+          SoundManager.Instance.Play(SoundManager.Instance.Swoosh2.clip);
+        }, 5f);
+        FunctionTimer.Create(() => {
+          SoundManager.Instance.Play(SoundManager.Instance.Swoosh3.clip);
+          C_AnswerText.enabled = C_TitleText.enabled = true;
+        }, 6f);
     }
 }

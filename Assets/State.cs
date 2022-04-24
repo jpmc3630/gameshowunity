@@ -144,9 +144,21 @@ public sealed class State
         // sound fx manager
         // settings screen
 
-        FunctionTimer.Create(() => State.Instance.startGame(), 10f, "", true);
+        
+        FunctionTimer.Create(() => renderScript.redrawScoreboard(), 3f, "", true);
+        FunctionTimer.Create(() => State.Instance.startGame(), 8f, "");
     }
 
+    // public void calculateScores() {
+    //   // if player answer equals question answer, then add to score
+    //   for (int i=0; i < instance.playerList.Count; i++) {
+    //     if (instance.playerList[i].Id == user_id && instance.playerList[i].Answer == null) {
+    //       instance.playerList[i].Answer = answer;
+    //       Debug.Log("Player " + instance.playerList[i].Name + " answered: " + instance.playerList[i].Answer);
+    //       break;
+    //     }
+    //   }
+    // }
     public void setPlayerAnswer(String user_id, String answer) {
       // if timer isn't running, start it
       if (question.playersAnswered == 0) {
@@ -157,6 +169,12 @@ public sealed class State
       for (int i=0; i< instance.playerList.Count; i++) {
         if (instance.playerList[i].Id == user_id && instance.playerList[i].Answer == null) {
           instance.playerList[i].Answer = answer;
+
+          // if the player's answer is correct, add to score
+          if (instance.playerList[i].Answer == question.answerPosition) {
+            instance.playerList[i].Score++;
+          }
+          
           Debug.Log("Player " + instance.playerList[i].Name + " answered: " + instance.playerList[i].Answer);
           break;
         }
@@ -168,6 +186,7 @@ public sealed class State
         Debug.Log("Everyone has answered");
         FunctionTimer.StopAllTimersWithName("Timeout");
         State.Instance.showAnswers();
+        // State.Instance.calculateScores();
       }
     }
 

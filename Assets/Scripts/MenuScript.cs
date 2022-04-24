@@ -13,6 +13,7 @@ public class MenuScript : MonoBehaviour
     public GameObject SettingsPanel;
     public GameObject LoadingPanel;
     public GameObject QuestionPanel;
+    public GameObject ScoreboardPanel;
     public GameObject MenuPanel;
     // public GameObject LogoutButton;
     public GameObject StartGameButton;
@@ -27,10 +28,13 @@ public class MenuScript : MonoBehaviour
     }
 
     public void closeAllPanels() {
+      Debug.Log("Close all panels func ........");
         MenuPanel.SetActive(false);
         LoginPanel.SetActive(false);
         LobbyPanel.SetActive(false);
         SettingsPanel.SetActive(false);
+        QuestionPanel.SetActive(false);
+        ScoreboardPanel.SetActive(false);
         LoadingPanel.SetActive(true);
     }
 
@@ -83,6 +87,11 @@ public class MenuScript : MonoBehaviour
         State.Instance.currentScreen = "question";
         LoadingPanel.SetActive(false);
         QuestionPanel.SetActive(true);
+    }
+    public void showScoreboardPanel() {
+        State.Instance.currentScreen = "scoreboard";
+        LoadingPanel.SetActive(false);
+        ScoreboardPanel.SetActive(true);
     }
 
     public void StartGameButtonClick() {

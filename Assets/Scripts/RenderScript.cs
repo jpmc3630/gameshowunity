@@ -12,6 +12,7 @@ public class RenderScript : MonoBehaviour
     
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playersList;
+    [SerializeField] private Transform scoreList;
     public TextMeshProUGUI QuestionText;
     public TextMeshProUGUI A_AnswerText;
     public TextMeshProUGUI B_AnswerText;
@@ -43,6 +44,35 @@ public class RenderScript : MonoBehaviour
                 texts[0].text = State.Instance.playerList[i].Name;
             }
         }
+    }
+
+
+    public void redrawScoreboard() {
+        Debug.Log("redrawScoreboard func...");
+        State.Instance.menuScript.closeAllPanels();
+        // clear the list
+        foreach (Transform child in scoreList) {
+            GameObject.Destroy(child.gameObject);
+        }
+        // for each player in state, draw their name
+        for (int i=0; i< State.Instance.playerList.Count; i++) {
+            Debug.Log(State.Instance.playerList[i].Id + " - " + State.Instance.playerList[i].Name + State.Instance.playerList[i].Score);
+
+            GameObject newMessage = (GameObject)Instantiate(playerPrefab, scoreList.transform.position + new Vector3(0.0f, -200.0f * i, 0.0f), playersList.transform.rotation);
+            newMessage.transform.SetParent(scoreList);
+            newMessage.transform.SetSiblingIndex(scoreList.childCount - 2);
+
+            Debug.Log("playerList.childCount: " + scoreList.childCount);
+            var texts = newMessage.GetComponentsInChildren<Text>();
+            Debug.Log(texts);
+            if (texts != null
+                && texts.Length > 0)
+            {
+                texts[0].text = State.Instance.playerList[i].Name + " - " + State.Instance.playerList[i].Score;
+            }
+        }
+
+        State.Instance.menuScript.showScoreboardPanel();
     }
 
     public void drawQuestion(Question question) {

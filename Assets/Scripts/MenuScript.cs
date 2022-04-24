@@ -86,6 +86,8 @@ public class MenuScript : MonoBehaviour
     }
 
     public void StartGameButtonClick() {
+        // play the music
+        SoundManager.Instance.PlayMusic(SoundManager.Instance.MusicSource.clip);
         State.Instance.startGame();
     }
 
